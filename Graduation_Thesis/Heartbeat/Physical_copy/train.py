@@ -20,7 +20,9 @@ from imblearn.over_sampling import RandomOverSampler
 # -- 입력/출력 경로 ---
 TRAIN_FEATURES_CSV = r"D:\MDO\heartbeat\beat\Dataset\Wavelet\wavelet_features_train.csv"
 MODEL_SAVE_PATH = r"D:\MDO\heartbeat\beat\Physical_copy\model\physical_copy_model60.pt"
-SCALER_SAVE_PATH = r"D:\MDO\heartbeat\beat\Physical_copy\model\physical_copy_scaler60.pkl"
+SCALER_SAVE_PATH = (
+    r"D:\MDO\heartbeat\beat\Physical_copy\model\physical_copy_scaler60.pkl"
+)
 
 # -- 하이퍼파라미터 ---
 SEED = 42
@@ -29,6 +31,7 @@ BATCH_SIZE = 256
 LEARNING_RATE = 1e-3
 VALIDATION_SPLIT = 0.2
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 # ====================================================================
 # 2. 재현성 고정 함수 *난수 고정
@@ -42,6 +45,7 @@ def set_seed(seed):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
+
 # ====================================================================
 # 3. Conv1D 모델 정의 (모든 코드 통일 해야함)
 # ====================================================================
@@ -52,24 +56,21 @@ class ConvFeatNet(nn.Module):
             nn.Conv1d(in_channels, 32, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.BatchNorm1d(32),
-
             nn.Conv1d(32, 64, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.BatchNorm1d(64),
-
             nn.Conv1d(64, 128, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.BatchNorm1d(128),
-
             nn.AdaptiveAvgPool1d(1),
-            
             nn.Flatten(),
             nn.Dropout(0.4),
-            nn.Linear(128, num_classes)
+            nn.Linear(128, num_classes),
         )
 
     def forward(self, x):
         return self.net(x)
+
 
 # ====================================================================
 # 4. 메인 학습 로직
@@ -81,24 +82,21 @@ def main():
 
     # --- 데이터 준비 ---
     df = pd.read_csv(TRAIN_FEATURES_CSV)
-    X = df.drop('label', axis=1).values.astype(np.float32)
-    y = df['label'].values.astype(np.int64)
+    X = df.drop("label", axis=1).values.astype(np.float32)
+    y = df["label"].values.astype(np.int64)
 
     # 1. 훈련 / 검증 데이터 분할
     X_train, X_val, y_train, y_val = train_test_split(
-        X, y,
-        test_size=VALIDATION_SPLIT,
-        random_state=SEED,
-        stratify=y
+        X, y, test_size=VALIDATION_SPLIT, random_state=SEED, stratify=y
     )
 
     # 2. 스케일러 학습 및 적용
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_val_scaled = scaler.transform(X_val)
-    
+
     # 3. 훈련 데이터에만 물리적 복제 적용
-    ros = RandomOverSampler(sampling_strategy='auto', random_state=SEED)
+    ros = RandomOverSampler(sampling_strategy="auto", random_state=SEED)
     X_train_resampled, y_train_resampled = ros.fit_resample(X_train_scaled, y_train)
 
     print(f"복제 전 훈련 데이터 shape: {X_train_scaled.shape}")
@@ -106,10 +104,13 @@ def main():
     print(f"검증 데이터 shape: {X_val_scaled.shape}")
     print(f"복제 후 라벨 분포: {np.bincount(y_train_resampled)}")
 
-
     # 4. PyTorch DataLoader 생성
-    train_dataset = TensorDataset(torch.tensor(X_train_resampled).unsqueeze(1), torch.tensor(y_train_resampled))
-    val_dataset = TensorDataset(torch.tensor(X_val_scaled).unsqueeze(1), torch.tensor(y_val))
+    train_dataset = TensorDataset(
+        torch.tensor(X_train_resampled).unsqueeze(1), torch.tensor(y_train_resampled)
+    )
+    val_dataset = TensorDataset(
+        torch.tensor(X_val_scaled).unsqueeze(1), torch.tensor(y_val)
+    )
 
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
@@ -147,18 +148,20 @@ def main():
                 features, labels = features.to(DEVICE), labels.to(DEVICE)
                 outputs = model(features)
                 loss = criterion(outputs, labels)
-                
+
                 val_loss += loss.item() * features.size(0)
                 _, predicted = torch.max(outputs.data, 1)
                 val_total += labels.size(0)
                 val_correct += (predicted == labels).sum().item()
 
-        val_accuracy = 100 * val_correct / val_total
+        val_accuracy = 10 * val_correct / val_total
         val_loss /= val_total
 
-        print(f"Epoch {epoch}/{EPOCHS} | "
-              f"Train Loss: {train_loss:.4f}, Train Acc: {train_accuracy:.2f}% | "
-              f"Val Loss: {val_loss:.4f}, Val Acc: {val_accuracy:.2f}%")
+        print(
+            f"Epoch {epoch}/{EPOCHS} | "
+            f"Train Loss: {train_loss:.4f}, Train Acc: {train_accuracy:.2f}% | "
+            f"Val Loss: {val_loss:.4f}, Val Acc: {val_accuracy:.2f}%"
+        )
 
     # --- 모델 및 스케일러 저장 ---
     Path(MODEL_SAVE_PATH).parent.mkdir(parents=True, exist_ok=True)
