@@ -116,6 +116,7 @@ def save_random_predictions(
     )
 
     out_dir = os.path.join(out_project, run_name)
+
     print(f"완료! 시각화된 이미지가 다음 폴더에 저장되었습니다:\n  {out_dir}")
     print(f"저장 개수: {len(sample_imgs)}장")
 
