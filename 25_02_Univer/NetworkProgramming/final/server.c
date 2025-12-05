@@ -86,10 +86,22 @@ int main(int argc, char *argv[]) {
 
                 // 패킷 처리 로직
                 if (packet.type == MSG_JOIN) {
+                    
+                    // 1. 엔터 제거 (잘 넣으셨습니다!)
+                    int len = strlen(packet.source);
+                    if (len > 0 && packet.source[len - 1] == '\n') {
+                        packet.source[len - 1] = '\0'; 
+                    }
+
+                    // 2. 이름 저장 및 출력
                     strcpy(clients[i].name, packet.source);
                     printf("User Joined: %s\n", packet.source);
+
+                    // [삭제하세요] 아래 두 줄은 위와 완전히 똑같아서 필요 없습니다.
+                    // strcpy(clients[i].name, packet.source);  <-- 삭제
+                    // printf("User Joined: %s\n", packet.source);  <-- 삭제
                     
-                    // 입장 알림 브로드캐스트
+                    // 3. 입장 알림 브로드캐스트
                     Packet noti;
                     noti.type = MSG_NORMAL;
                     sprintf(noti.data, ">>> [Notice] %s joined the chat.", packet.source);
