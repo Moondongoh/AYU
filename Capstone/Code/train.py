@@ -14,7 +14,7 @@ def train_safety_model():
             epochs=100,
             imgsz=640,
             project="safety_model_results",
-            name="new_dataset_exp01",
+            name="이름지정",
         )
         print("모델 학습이 성공적으로 완료되었습니다.")
         print(
