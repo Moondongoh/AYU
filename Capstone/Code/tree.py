@@ -33,5 +33,6 @@ if __name__ == "__main__":
         with open(output_filename, "w", encoding="utf-8") as f:
             generate_folder_structure(current_directory, f)
         print("작업이 완료되었습니다!")
+
     except Exception as e:
         print(f"오류가 발생했습니다: {e}")
