@@ -1,0 +1,22 @@
+package ch03;
+
+import java.util.Scanner;
+
+public class _02_YardToMeter {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		final double ONE_YARD = 0.9144; // 변수를 final을 이용해 상수로 선언을 시켜준 부분 (대문자 지키기)
+		
+		System.out.print("야드 입력 : ");
+		Scanner inp = new Scanner(System.in); // scanf같음
+		
+		double yard = inp.nextDouble();
+		inp.close();
+		
+		double meter = yard * ONE_YARD;
+		System.out.println(yard + "yard 는" + meter + "meter 입니다.");
+	}
+
+}

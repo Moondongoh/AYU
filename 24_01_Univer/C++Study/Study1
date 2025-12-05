@@ -1,0 +1,70 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(void)
+{
+	//int vall;
+	//cout << "첫 번째 숫자 입력: ";
+	//cin >> vall;
+
+	//cout << vall << endl;
+
+	//int vall2;
+	//cout << "두 번째 숫자 입력: ";
+	//cin >> vall2;
+
+	//cout << vall2 << endl;
+
+	//int result = vall + vall2;
+	//cout << "결과 값 : " << result << endl;
+
+	//char name[15];
+	//cout << "당신의 이름은 : ";
+	//cin >> name;
+	//cout << name << endl;
+
+	//int num1;
+	//int num2;
+	//int num3;
+	//int num4;
+	//int num5;
+
+	//cout << "1번 숫자 입력 : ";
+	//cin >> num1;
+	//
+	//cout << "2번 숫자 입력 : ";
+	//cin >> num2;
+
+	//cout << "3번 숫자 입력 : ";
+	//cin >> num3;
+
+	//cout << "4번 숫자 입력 : ";
+	//cin >> num4;
+
+	//cout << "5번 숫자 입력 : ";
+	//cin >> num5;
+
+	//int result = num1 + num2 + num3 + num4 + num5;
+	//cout << "결과 : " << result << endl;
+
+	//char name[15];
+	//cout << "이름 : ";
+	//cin.getline(name,10);
+
+	//char phone[15];
+	//cout << "전화번호 : ";
+	//cin.getline(phone,15);
+
+	//cout << "이름 :" << name << " 전화번호 : " << phone << endl;
+
+	//string phone2;
+
+	//cout << "전화번호2 입력 : ";
+
+	//getline(cin, phone2);
+
+	//cout << "전화번호2 : " << phone2 << endl;
+
+	//return 0;
+}

@@ -1,0 +1,100 @@
+#include <windows.h>
+#include <stdio.h>
+
+#define ID_USERNAME_EDIT 1001
+#define ID_PASSWORD_EDIT 1002
+#define ID_LOGIN_BUTTON 1003
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    // 윈도우 클래스 등록
+    WNDCLASS wc = { 0 };
+    wc.lpfnWndProc = WndProc;
+    wc.hInstance = hInstance;
+    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wc.lpszClassName = "MyClass";
+
+    if (!RegisterClass(&wc)) {
+        MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        return 0;
+    }
+
+    // 윈도우 생성
+    HWND hwnd = CreateWindowEx(0, "MyClass", "Login Window", WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX,
+        CW_USEDEFAULT, CW_USEDEFAULT, 300, 150, NULL, NULL, hInstance, NULL);
+
+    if (hwnd == NULL) {
+        MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        return 0;
+    }
+
+    // "login" 레이블 생성
+    CreateWindow("STATIC", "login:", WS_CHILD | WS_VISIBLE, 20, 20, 50, 20, hwnd, NULL, hInstance, NULL);
+
+    // 사용자 이름 입력란 생성
+    CreateWindowEx(0, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 70, 20, 200, 20, hwnd, (HMENU)ID_USERNAME_EDIT, NULL, NULL);
+
+    // "passwd" 레이블 생성
+    CreateWindow("STATIC", "passwd:", WS_CHILD | WS_VISIBLE, 20, 50, 50, 20, hwnd, NULL, hInstance, NULL);
+
+    // 암호 입력란 생성
+    CreateWindowEx(0, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_PASSWORD, 70, 50, 200, 20, hwnd, (HMENU)ID_PASSWORD_EDIT, NULL, NULL);
+
+    // 로그인 버튼 생성
+    CreateWindowEx(0, "BUTTON", "Login", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON, 100, 80, 100, 30, hwnd, (HMENU)ID_LOGIN_BUTTON, NULL, NULL);
+
+    // 윈도우 표시
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
+
+    // 메시지 루프
+    MSG msg;
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return msg.wParam;
+}
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    switch (msg) {
+    case WM_COMMAND:
+        if (LOWORD(wParam) == ID_LOGIN_BUTTON) {
+            char username[100];
+            char password[100];
+
+            // 사용자 이름 입력란에서 텍스트 가져오기
+            GetDlgItemText(hwnd, ID_USERNAME_EDIT, username, sizeof(username));
+
+            // 암호 입력란에서 텍스트 가져오기
+            GetDlgItemText(hwnd, ID_PASSWORD_EDIT, password, sizeof(password));
+
+            // 파일에 사용자 이름과 암호 저장
+            FILE* file = fopen("pid.txt", "w");
+            if (file == NULL) {
+                MessageBox(hwnd, "Failed to open file!", "Error!", MB_ICONERROR | MB_OK);
+            }
+            else {
+                fprintf(file, "username: %s\npassword: %s", username, password);
+                fclose(file);
+                MessageBox(hwnd, "Login information saved to pid.txt!", "Success!", MB_ICONINFORMATION | MB_OK);
+            }
+        }
+        break;
+
+    case WM_CLOSE:
+        DestroyWindow(hwnd);
+        break;
+
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+
+    default:
+        return DefWindowProc(hwnd, msg, wParam, lParam);
+    }
+
+    return 0;
+}

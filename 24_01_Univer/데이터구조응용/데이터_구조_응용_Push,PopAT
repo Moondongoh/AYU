@@ -1,0 +1,229 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define STACK_SIZE 10
+
+int* stack;
+int* temp1;
+int top = -1;               // top 초기화
+int size = 1;
+
+void printStack();
+void pushAt(int index, int item);
+void popAt(int index);
+
+// 스택이 빈 상태인지 확인하는 연산
+int isEmpty() 
+{
+    if (top == -1) return 1;
+    else return 0;
+}
+
+// 스택이 포화 상태인지 확인하는 연산
+int isFull() 
+{
+    if (top % STACK_SIZE == 9) return 1;
+    else return 0;
+}
+
+// 스택의 원소를 출력하는 연산
+void printStack() 
+{
+    int i;
+    printf(" STACK SIZE [%d]\n", (STACK_SIZE * size));
+    printf("\n STACK [ ");
+    for (i = 0; i <= top; i++) printf("%d ", stack[i]);
+    printf("]\n");
+}
+
+// 스택의 top에 원소를 삽입하는 연산
+void push(int item) 
+{
+    int* temp;
+
+    if (isFull()) 
+    {
+        printf(" Full STACK\n");
+        temp = (int*)malloc((STACK_SIZE * size) * sizeof(int));
+
+        printStack();
+        for (int i = 0; i < (top + 1); i++) temp[i] = stack[i];
+        stack = (int*)malloc((STACK_SIZE * (size + 1)) * sizeof(int));
+
+        for (int i = 0; i < (top + 1); i++) stack[i] = temp[i];
+        stack[++top] = item;  // top을 증가시킨 후 현재 top에 원소 삽입
+
+        size++;
+
+        free(temp);
+
+    }
+    else stack[++top] = item;  // top을 증가시킨 후 현재 top에 원소 삽입
+}
+
+// 원하는 스택의 위치에 원소를 삽입하는 연산
+void pushAt(int index, int item1) 
+{
+    if (index < 0 || index > top + 1) 
+    {
+        printf("오류발생!\n");
+        return;
+    }
+
+    if (isFull()) 
+    {
+        printf(" 스택이 꽉 찼습니다.\n");
+        temp1 = (int*)malloc((STACK_SIZE * size) * sizeof(int));
+
+        printStack();
+        for (int i = 0; i < (top + 1); i++) temp1[i] = stack[i];
+        stack = (int*)malloc((STACK_SIZE * (size + 1)) * sizeof(int));
+
+        for (int i = 0; i < (top + 1); i++) stack[i] = temp1[i];
+
+        size++;
+
+        free(temp1);
+
+    }
+
+    // 인덱스 이후의 요소들을 뒤로 밀기
+    for (int i = top + 1; i > index; i--) 
+    {
+        stack[i] = stack[i - 1];
+    }
+    stack[index] = item1;
+    top++;
+    printf("숫자 %d을(를) 위치 %d에 넣었습니다.\n", item1, index);
+}
+
+
+int pop() 
+{
+    if (isEmpty()) 
+    {   // 스택이 공백 상태인 경우
+        printf("\n\n 스택이 비었습니다!!\n");
+        return 0;
+    }
+    else
+    {
+        // 동적 배열로 구현
+        int i, re, * temp;
+
+        if (top % 10 == 0)
+        {
+            printf(" CHANGE STACK\n");
+            re = stack[top];
+            temp = (int*)malloc(STACK_SIZE * (size - 1) * sizeof(int));
+            for (i = 0; i < top; i++) temp[i] = stack[i];
+            stack = (int*)malloc(STACK_SIZE * (size - 1) * sizeof(int));
+
+            for (i = 0; i < top; i++) stack[i] = temp[i];
+
+            free(temp);
+
+            top--;
+            size--;
+
+            return re;
+
+        }
+        else
+            return stack[top--];         // 현재 top의 원소를 삭제한 후 top 감소한다
+    }
+}
+
+void popAt(int index) 
+{
+
+    int i, re, * temp;
+
+   if (isEmpty()) 
+   {
+      printf("스택이 비었습니다.!!\n");
+      return;
+   }
+
+   if (index < 0 || index > top) 
+   {
+      printf("오류 발생!\n");
+      return;
+   }
+
+   if (top % 10 == 0)
+   {
+       printf(" CHANGE STACK\n");
+       re = stack[top];
+       temp = (int*)malloc(STACK_SIZE * (size - 1) * sizeof(int));
+
+       for (i = 0; i < top; i++) temp[i] = stack[i];
+
+       stack = (int*)malloc(STACK_SIZE * (size - 1) * sizeof(int));
+
+       for (i = 0; i < top; i++) stack[i] = temp[i];
+
+
+       free(temp);
+       top--;
+       size--;
+
+       //return re;
+   }
+
+   // 인덱스 이후의 요소들을 앞으로 당기기
+   for (int i = index; i < top; i++) 
+   {
+      stack[i] = stack[i + 1];
+   }
+   top--;
+   printf("위치 %d값을 제거합니다.\n", index);
+}
+
+void main(void) 
+{
+    int i;
+    stack = (int*)malloc(STACK_SIZE * sizeof(int));
+
+    for (i = 0; i < 44; i++) push(i + 1);
+
+    printStack();
+
+    for (i = 0; i < 7; i++) printf(" POP Data [%d]\n", pop());
+
+    printStack();
+
+    pushAt(2, 200);
+    pushAt(3, 300);
+    pushAt(4, 400);
+    pushAt(5, 500);
+    pushAt(6, 600);
+    printStack();
+
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+    popAt(1);
+    printStack();
+
+    free(stack);
+
+    getchar();
+}

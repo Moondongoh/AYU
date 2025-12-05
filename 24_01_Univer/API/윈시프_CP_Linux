@@ -1,0 +1,52 @@
+/* Linux Chapter 1. Basic cp file copy program. UNIX Implementation. */
+/* cp file1 file2: Copy file1 to file2. */
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <errno.h>
+#define BUF_SIZE 256
+
+int main (int argc, char *argv [])
+{
+	int input_fd, output_fd;
+	ssize_t bytes_in, bytes_out;
+	char rec [BUF_SIZE];
+	if (argc != 3) {
+		printf ("Usage: cp file1 file2\n");
+		return 1;
+	}
+	input_fd = open (argv [1], O_RDONLY);
+	if (input_fd == -1) {
+		perror (argv [1]);
+		return 2;
+	}
+	output_fd = open (argv [2], O_WRONLY | O_CREAT, 0666);
+	if (output_fd == -1) {
+		perror (argv [2]);
+		return 3;
+	}
+
+/* Process the input file a record at a time. */
+
+	while ((bytes_in = read (input_fd, &rec, BUF_SIZE)) > 0) {
+		bytes_out = write (output_fd, &rec, bytes_in);
+		if (bytes_out != bytes_in) {
+			perror ("Fatal write error.");
+			return 4;
+		}
+	}
+	close (input_fd);
+	close (output_fd);
+	return 0;
+}
+
+
+/*
+한번에 256씩 읽어서 씀
+3개의 파일을 컴파일해 실행 표로 결과를 저장.
+누가 좋은지 비교를 한다.
+Buf_size를 1로 해서 걸린 시간 256개를 읽어서 해서 걸린 시간 main에 start랑 end넣어서 비교 ㄱ  >>> 1 256 512 1024 4096 8192 비교
+파일 사이즈는 Giga가 넘는
+*/

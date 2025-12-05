@@ -1,0 +1,182 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <fcntl.h>
+#include <io.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <time.h>
+#include <windows.h>
+
+#define FILE_PATH_SIZE 256
+
+int copyStandard(char* SourceFile, int BufferSize) {
+    FILE* Input, * Output;
+    size_t InputCount, OutputCount;
+    char DestinationFile[FILE_PATH_SIZE];
+    unsigned char* Buffer =
+        (unsigned char*)malloc(sizeof(unsigned char) * BufferSize);
+
+    sprintf_s(DestinationFile, FILE_PATH_SIZE, "%s.%d.std", SourceFile,
+        BufferSize);
+
+    Input = fopen(SourceFile, "rb");
+    Output = fopen(DestinationFile, "wb");
+
+    if (Input == NULL || Output == NULL) {
+        fprintf(stderr, "Error: Cannot open testfile!\n");
+        return 1;
+    }
+
+    while ((InputCount = fread(Buffer, 1, BufferSize, Input)) > 0) {
+        OutputCount = fwrite(Buffer, 1, InputCount, Output);
+        if (OutputCount != InputCount) {
+            fprintf(stderr, "Error: Write operation failed!\n");
+            return 2;
+        }
+    }
+
+    fclose(Input);
+    fclose(Output);
+
+    free(Buffer);
+
+    return 0;
+}
+
+int copyWinApi(char* SourceFile, int BufferSize) {
+    HANDLE Input, Output;
+    DWORD InputCount, OutputCount;
+    CHAR DestinationFile[FILE_PATH_SIZE];
+
+    LPBYTE Buffer = (LPBYTE)malloc(sizeof(BYTE) * BufferSize);
+
+    sprintf_s(DestinationFile, FILE_PATH_SIZE, "%s.%d.win", SourceFile,
+        BufferSize);
+
+    Input = CreateFile(SourceFile, GENERIC_READ, FILE_SHARE_READ, NULL,
+        OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    Output = CreateFile(DestinationFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL, NULL);
+
+    if (Input == INVALID_HANDLE_VALUE || Output == INVALID_HANDLE_VALUE) {
+        fprintf(stderr, "Error: Cannot open testfile!\n");
+
+        CloseHandle(Input);
+        CloseHandle(Output);
+        free(Buffer);
+
+        return 1;
+    }
+
+    while (ReadFile(Input, Buffer, BufferSize, &InputCount, NULL) &&
+        InputCount > 0) {
+        WriteFile(Output, Buffer, InputCount, &OutputCount, NULL);
+
+        if (InputCount != OutputCount) {
+            fprintf(stderr, "Error: Write operation failed!\n");
+
+            CloseHandle(Input);
+            CloseHandle(Output);
+            free(Buffer);
+
+            return 2;
+        }
+    }
+
+    CloseHandle(Input);
+    CloseHandle(Output);
+    free(Buffer);
+
+    return 0;
+}
+
+int copyLinux(char* SourceFile, int BufferSize) {
+    int Input, Output;
+    size_t InputCount, OutputCount;
+    char DestinationFile[FILE_PATH_SIZE];
+    unsigned char* Buffer =
+        (unsigned char*)malloc(sizeof(unsigned char) * BufferSize);
+
+    sprintf(DestinationFile, "%s.%d.unix", SourceFile, BufferSize);
+
+    Input = _open(SourceFile, O_RDONLY | O_BINARY);
+    Output = _open(DestinationFile, O_WRONLY | O_CREAT | O_BINARY, 0666);
+
+    if (Input == -1 || Output == -1) {
+        fprintf(stderr, "Error: Cannot open testfile!\n");
+        return 1;
+    }
+
+    while ((InputCount = _read(Input, Buffer, BufferSize)) > 0) {
+        OutputCount = _write(Output, Buffer, InputCount);
+        if (OutputCount != InputCount) {
+            fprintf(stderr, "Error: Write operation failed!\n");
+            return 2;
+        }
+    }
+
+    _close(Input);
+    _close(Output);
+
+    free(Buffer);
+
+    return 0;
+}
+
+double testCopy(char* SourceFile, int BufferSize,
+    int (*copyFunction)(char*, int)) {
+    int Result;
+    clock_t Start, End;
+
+    Start = clock();
+
+    Result = (*copyFunction)(SourceFile, BufferSize);
+
+    if (Result > 0) {
+        return -1;
+    }
+
+    End = clock();
+
+    return 10.0 * (End - Start) / CLOCKS_PER_SEC;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc > 2) {
+        puts("Usage: performance_test [source file]");
+        return 1;
+    }
+
+    char SourceFile[FILE_PATH_SIZE];
+
+    if (argc == 1) {
+        strcpy_s(SourceFile, FILE_PATH_SIZE, "source.bin");
+    }
+    else {
+        strcpy_s(SourceFile, FILE_PATH_SIZE, argv[1]);
+    }
+
+    int BufferSizes[8] = { 1, 128, 256, 512, 1024, 4096, 8192, 16384 };
+
+    double StandardTime, WinApiTime, UnixTime;
+
+    printf("%-10s%s%\t\t%s%\t\t%s%\n", "버퍼 크기", "STD C", "유닉스",
+        "윈API");
+
+    for (int i = 0; i < 8; ++i) {
+        StandardTime = testCopy(SourceFile, BufferSizes[i], copyStandard);
+        UnixTime = testCopy(SourceFile, BufferSizes[i], copyLinux);
+        WinApiTime = testCopy(SourceFile, BufferSizes[i], copyWinApi);
+
+        printf("%-10d%.2lf초\t%.2lf초\t\t%.2lf초\n", BufferSizes[i], StandardTime,
+            UnixTime, WinApiTime);
+
+        Sleep(10000);
+    }
+
+    puts("COPY END!");
+    getchar();
+
+    return 0;
+}

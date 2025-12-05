@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#pragma warning(disable:4996)
+
+#define FILENAME_A "a.txt"
+#define FILENAME_B "b.txt"
+
+// 지정된 버퍼 크기를 사용하여 파일을 복사하는 함수
+double copyFile(const char* srcFilename, const char* destFilename, size_t bufferSize) {
+    FILE* srcFile, * destFile;
+    clock_t start, end;
+    double duration;
+
+    // 소스 파일 열기
+    srcFile = fopen(srcFilename, "rb");
+    if (srcFile == NULL) {
+        perror("소스 파일 열기 오류");
+        exit(EXIT_FAILURE);
+    }
+
+    // 대상 파일 열기
+    destFile = fopen(destFilename, "wb");
+    if (destFile == NULL) {
+        perror("대상 파일 열기 오류");
+        exit(EXIT_FAILURE);
+    }
+
+    // 버퍼 할당
+    char* buffer = (char*)malloc(bufferSize);
+    if (buffer == NULL) {
+        perror("메모리 할당 오류");
+        exit(EXIT_FAILURE);
+    }
+
+    // 버퍼를 사용하여 파일 복사
+    start = clock();
+    size_t bytesRead;
+    while ((bytesRead = fread(buffer, 1, bufferSize, srcFile)) > 0) {
+        fwrite(buffer, 1, bytesRead, destFile);
+    }
+    end = clock();
+    duration = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    // 자원 해제
+    free(buffer);
+    fclose(srcFile);
+    fclose(destFile);
+
+    return duration;
+}
+
+int main() {
+    size_t bufferSizes[] = { 1, 256, 512, 1024, 4096, 8192 };
+    int numBufferSizes = sizeof(bufferSizes) / sizeof(bufferSizes[0]);
+
+    printf("버퍼 크기\t소요 시간 (초)\n");
+
+    for (int i = 0; i < numBufferSizes; ++i) {
+        size_t bufferSize = bufferSizes[i];
+        double duration = copyFile(FILENAME_A, FILENAME_B, bufferSize);
+        printf("%zu\t\t%.6f\n", bufferSize, duration);
+    }
+
+    return 0;
+}

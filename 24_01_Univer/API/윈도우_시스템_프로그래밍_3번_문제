@@ -1,0 +1,257 @@
+#include <windows.h>
+#include "resource.h"
+#include <stdio.h>
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, 
+			WPARAM wParam, LPARAM lParam);
+
+COLORREF TextColor;
+
+LPCTSTR lpszClass = TEXT("New Title Hong Gil Dong");
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, //WINAPI : À©¨Ïµµì¥?¿ì¯i ÇÁA·Î¤I±×¾¡?·¥¤¡?ÀÌI¶ó?´Â¥A ÀÇC¹Ì?
+		   LPSTR lpszCmdLine, int nCmdShow)						 //hInstance : ¿î¯i¿µ??Ã¼¨ùÁ¦|ÀÇC Ä¿¢¯³Î?ÀÌI ÀÀA¿ë¯e ÇÁA·Î¤I±×¾¡?·¥¤¡?¿¡??ºÎ¬I¿©??ÇÑN ID
+{																 //szCmdLine : Ä¿¢¯¸à¬aÆ®¡¢?¶ó?ÀÎI »ó?¿¡??¼­ù¡?ÇÁA·Î¤I±×¾¡?·¥¤¡?±¸¾¢?µ¿ì¢?½Ã? Àüu´Þ¥¨?µÈ? ¹®ö¢?ÀÚU¿­??
+	HWND	hwnd;												 //iCmdShow : À©¨Ïµµì¥?¿ì¯i°¡Æ¢?È­¡©¸é¬e¿¡??Ãâa·Â¤AµÉ? ÇüuÅÂA
+	MSG		msg;
+	WNDCLASS WndClass;											 //WndClass ¶ó?´Â¥A ±¸¾¢?Á¶¢ÒÃ¼¨ù Á¤¢´ÀÇC									 
+	WndClass.style			= CS_HREDRAW | CS_VREDRAW;			 //Ãâa·Â¤A½ºö¨?Å¸¢¬ÀÏI : ¼ö?Á÷¡À/¼ö?Æò¡oÀÇC º¯?È­¡©½Ã? ´Ù¥U½Ã? ±×¾¡?¸²¬©?
+	WndClass.lpfnWndProc	= WndProc;							 //ÇÁA·Î¤I½Ã?Àúu ÇÔO¼ö?¸í¬i
+	WndClass.cbClsExtra		= 0;								 //O/S »ç?¿ë¯e ¿©??ºÐ¬¨?¸Þ¬¨?¸ð¬©?¸®¬¢?(Class)
+	WndClass.cbWndExtra		= 0;								 //O/s »ç?¿ë¯e ¿©??ºÐ¬¨?¸Þ¬¨?¸ð¬©?¸®¬¢?(Window)
+	WndClass.hInstance		= hInstance;						 //ÀÀA¿ë¯e ÇÁA·Î¤I±×¾¡?·¥¤¡?ID
+	WndClass.hIcon			= LoadIcon(NULL, IDI_APPLICATION);	 //¾Æú¨?ÀÌIÄÜU À¯?Çüu
+	WndClass.hCursor		= LoadCursor(NULL, IDC_ARROW);		 //Ä¿¢¯¼­ù¡?À¯?Çüu
+	WndClass.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);//¹è?°æÆ©?»ö?   
+	WndClass.lpszMenuName	= NULL;								 //¸Þ¬¨?´º¥¨?ÀÌI¸§¬¡?
+	WndClass.lpszClassName	= lpszClass;						 //Å¬¡þ·¡¤¢?½ºö¨?ÀÌI¸§¬¡?
+	RegisterClass(&WndClass);									 //¾Õ?¼­ù¡?Á¤¢´ÀÇCÇÑN À©¨Ïµµì¥?¿ì¯i Å¬¡þ·¡¤¢?½ºö¨?ÀÇC ÁÖO¼Ò?
+
+	hwnd = CreateWindow(lpszClass,								 //À©¨Ïµµì¥?¿ì¯i°¡Æ¢?»ý?¼ºù¨?µÇ?¸é¬e ÇÚUµé?(hwnd)ÀÌI ¹Ý?È¯?
+		lpszClass,												 //À©¨Ïµµì¥?¿ì¯i Å¬¡þ·¡¤¢?½ºö¨? Å¸¢¬ÀÌIÆ²¡©?ÀÌI¸§¬¡?
+		WS_OVERLAPPEDWINDOW,									 //À©¨Ïµµì¥?¿ì¯i ½ºö¨?Å¸¢¬ÀÏI
+		100,											 //À©¨Ïµµì¥?¿ì¯i À§¡×Ä¡¢®, xÁÂAÇ¥¡Í
+		50,											 //À©¨Ïµµì¥?¿ì¯i À§¡×Ä¡¢®, yÁÂAÇ¥¡Í
+		600,											 //À©¨Ïµµì¥?¿ì¯i Æø¡©?  
+		400,											 //À©¨Ïµµì¥?¿ì¯i ³ô?ÀÌI   
+		NULL,													 //ºÎ¬I¸ð¬©?À©¨Ïµµì¥?¿ì¯i ÇÚUµé?	 
+		LoadMenu(hInstance, MAKEINTRESOURCE(IDR_MENU1)),													 //¸Þ¬¨?´º¥¨?ÇÚUµé?
+		hInstance,    											 //ÀÀA¿ë¯e ÇÁA·Î¤I±×¾¡?·¥¤¡?ID
+		NULL     												 //»ý?¼ºù¨?µÈ? À©¨Ïµµì¥?¿ì¯i Á¤¢´º¸¬¢?
+	);
+	ShowWindow(hwnd, nCmdShow);									 //À©¨Ïµµì¥?¿ì¯iÀÇC È­¡©¸é¬e Ãâa·Â¤A
+	UpdateWindow(hwnd);											 //O/S ¿¡??WM_PAINT ¸Þ¬¨?½Ã?Áöo Àüu¼Û?
+
+	while(GetMessage(&msg, NULL, 0, 0))							 //WinProc()¿¡??¼­ù¡?PostQuitMessage() È£¡ÌÃâa ¶§Ò¡?±î¾iÁöo Ã³©ø¸®¬¢?
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);									 //WinMain -> WinProc  
+	}
+	return (int)msg.wParam;
+}
+
+HDC hdc;
+
+static int x, y, mx, my, Rx, Ry;
+int dx=20 ,dy=20;
+void CALLBACK TimerProc1(HWND hwnd, UINT iMsg, UINT ievent, DWORD dwTime)
+{
+		//if(ievent  == 1)
+		//x += dx;
+		//else
+		//	y += dy;
+
+	//x += dx;
+
+	//y += dy;
+
+	    //if( x < 0 || x > 550)
+		//{
+		//	dx = -dx;
+		//}
+
+		//if( y < 0 || y > 300)
+		//{
+		//	dy = -dy;
+		//}
+		x = rand()%550;
+		y = rand()%300;
+		InvalidateRect(hwnd, NULL, TRUE);
+}
+
+//void CALLBACK TimerProc2(HWND hwnd, UINT iMsg, UINT ievent, DWORD dwTime)
+//{
+//		//if(ievent  == 1)
+//		//	x += 10;
+//		//else
+//		y += 10;
+//		InvalidateRect(hwnd, NULL, FALSE);
+//}
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)     
+{
+
+	PAINTSTRUCT ps;
+
+	static char linebfr[256] = {0, };
+	static int oldX, oldY, left_button;
+	 
+	static int count;
+	char score[30];
+
+	switch (iMsg) 
+	{
+	case WM_CREATE:
+		SetTimer(hwnd, 1, 1000, TimerProc1);
+		//SetTimer(hwnd, 2, 5000, TimerProc2);
+		x = 0;
+		y = 0;
+		count = 0;
+		break;
+
+	/* case WM_TIMER:
+		if(wParam  == 1)
+			x += 10;
+		else
+			y += 10;
+		InvalidateRect(hwnd, NULL, FALSE);
+		break;
+	*/
+
+	case WM_CHAR:
+		InvalidateRect(hwnd, NULL, FALSE);
+		break;
+
+	
+	case WM_MOUSEMOVE:
+		Rx = LOWORD(lParam);
+		Ry = HIWORD(lParam);
+		
+		//m_count++;
+		//itoa(m_count, linebfr, 10);
+
+		InvalidateRect(hwnd, NULL, TRUE);
+		break;
+	
+
+	case WM_LBUTTONDOWN:
+
+		mx = LOWORD(lParam);
+		my = HIWORD(lParam);
+		left_button = TRUE;
+
+		if(mx < x+30 && mx > x-30)
+			 if(my < y+30 && my > y-30)
+		{
+			
+			count++;
+			//SetTimer(hwnd, 1, 800, TimerProc1);
+
+		}
+
+		
+
+
+		//m_count++;
+		//itoa(m_count, linebfr, 10);
+
+		InvalidateRect(hwnd, NULL, TRUE);
+		break;
+
+	case WM_RBUTTONDOWN:
+		x = LOWORD(lParam);
+		y = HIWORD(lParam);
+		left_button = FALSE;
+		//m_count--;
+		//itoa(m_count, linebfr, 10);
+
+		InvalidateRect(hwnd, NULL, TRUE);
+		break;
+
+		case WM_COMMAND:
+            
+      switch (LOWORD(wParam))          
+      {
+      
+		  case ID_TIMER_START:
+			SetTimer(hwnd, 1, 50, TimerProc1);
+			//InvalidateRect(hwnd, NULL, TRUE); 
+			break;
+		
+		  
+		  case ID_TIMER_STOP:
+			KillTimer(hwnd, 1);
+			break;
+
+	  case ID_RED:
+		  TextColor = 0x000000FF;
+		  InvalidateRect(hwnd, NULL, TRUE);        
+		  break;
+		  	  
+	  case ID_GREEN:
+		  TextColor = 0x0000FF00;
+		  InvalidateRect(hwnd, NULL, TRUE);        
+		  break;
+		  	  
+	  case ID_BLUE:
+		  TextColor = 0x00FF0000;
+		  InvalidateRect(hwnd, NULL, TRUE);        
+		  break;
+		  	  
+	  case ID_BLACK:
+		  TextColor = 0x00000000;
+		  InvalidateRect(hwnd, NULL, TRUE);        
+		  break;
+      }            
+      break;
+
+	case WM_PAINT:
+		hdc = BeginPaint(hwnd, &ps);
+		SetTextColor(hdc, TextColor);
+		sprintf(score, "Á¡¢®¼ö? : %d", count);
+		TextOut(hdc, 530, 0, score, strlen(score));
+
+		//TextOut(hdc, 100, 50, "        ",8 );
+		//TextOut(hdc, 100, 50, linebfr,strlen(linebfr) );
+		/*if(left_button == TRUE)
+			TextOut(hdc, x, y, "M", 1 );
+		else
+			TextOut(hdc, x, y, "  ", 2 );
+
+		if(left_button == TRUE)
+			SetPixel(hdc, x, y, RGB(255, 0, 0));
+		*/
+		TextOut(hdc, oldX, oldY, "   ", 3 );
+		TextOut(hdc, x, y, "AS", 2 );
+		Rectangle(hdc, Rx-10,Ry-10,Rx+10,Ry+10);
+
+		oldX = x;
+		oldY = y;
+		
+		EndPaint(hwnd, &ps);
+		break;
+
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	} 
+	return DefWindowProc(hwnd, iMsg, wParam, lParam);			 //CASE¿¡??¼­ù¡?Á¤¢´ÀÇCµÇ?Áöo ¾Ê?Àº¨¬ ¸Þ¬¨?½Ã?Áöo´Â¥A Ä¿¢¯³Î?ÀÌI Ã³©ø¸®¬¢?ÇÏIµµì¥?·Ï¤I ¸Þ¬¨?½Ã?Áöo Àüu´Þ¥¨?
+}
+
+/*
+		switch(wParam)
+		{
+		case 'i' : // UP
+			y -= 3;
+			break;
+		case 'j' : // LEFT
+			x -= 5;
+			break;
+		case 'k' : // RIGHT
+			x += 5;
+			break;
+		case 'm' : // DOWN
+			y += 3;
+			break;
+		}
+		*/

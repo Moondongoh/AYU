@@ -1,0 +1,67 @@
+#include <windows.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX_NUM 10000
+#define THREAD_COUNT 4
+
+typedef struct {
+    int start;
+    int end;
+    int* primes;
+    int count;
+} ThreadData;
+
+bool is_prime(int num) {
+    if (num < 2) return false;
+    for (int i = 2; i * i <= num; ++i) {
+        if (num % i == 0) return false;
+    }
+    return true;
+}
+
+DWORD WINAPI find_primes(LPVOID param) {
+    ThreadData* data = (ThreadData*)param;
+    int count = 0;
+
+    for (int i = data->start; i <= data->end; ++i) {
+        if (is_prime(i)) {
+            data->primes[count++] = i;
+        }
+    }
+    data->count = count;
+    return 0;
+}
+
+int main() {
+    HANDLE threads[THREAD_COUNT];
+    ThreadData threadData[THREAD_COUNT];
+    int primes[MAX_NUM] = { 0 };
+    int offset = MAX_NUM / THREAD_COUNT;
+
+    for (int i = 0; i < THREAD_COUNT; ++i) {
+        threadData[i].start = i * offset + 1;
+        threadData[i].end = (i == THREAD_COUNT - 1) ? MAX_NUM : (i + 1) * offset;
+        threadData[i].primes = (int*)malloc(MAX_NUM * sizeof(int));
+        threadData[i].count = 0;
+
+        threads[i] = CreateThread(NULL, 0, find_primes, &threadData[i], 0, NULL);
+        if (threads[i] == NULL) {
+            fprintf(stderr, "Error creating thread %d\n", i);
+            return 1;
+        }
+    }
+
+    WaitForMultipleObjects(THREAD_COUNT, threads, TRUE, INFINITE);
+
+    for (int i = 0; i < THREAD_COUNT; ++i) {
+        for (int j = 0; j < threadData[i].count; ++j) {
+            printf("%d ", threadData[i].primes[j]);
+        }
+        free(threadData[i].primes);
+        CloseHandle(threads[i]);
+    }
+
+    return 0;
+}

@@ -1,0 +1,20 @@
+package ch03;
+
+import java.util.Scanner;
+
+public class _01_Scanner {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		int n; // 변수 선언
+		System.out.print("정수 입력 : "); // 입력 구문 출력
+		Scanner in = new Scanner(System.in); // 입력 개체 생성?
+		n = in.nextInt(); // 변수 타입 
+		in.close(); // Scanner 닫기
+		
+		System.out.println("입력 받은 정수는 " + n + "입니다.");
+
+	}
+
+}

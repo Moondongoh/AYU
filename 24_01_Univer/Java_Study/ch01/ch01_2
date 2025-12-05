@@ -1,0 +1,22 @@
+package ch01;
+
+public class _02_EscapeSequence {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		/*
+		 * EscapeSequence : 출력 제어
+		 * - 역슬러시로 시작 (\)
+		 * 
+		 * \n : 줄 바꿈
+		 * \t : 탭
+		 * \" : 큰 따옴표 출력
+		 * 
+		 */
+		System.out.println("Write\n\n\nonce"); // 줄바꿈
+		System.out.println("사과\t배\t귤"); // 탭
+		System.out.println("apple\tpear\torange");
+		System.out.println("강아지는 \"멍멍\""); // 큰 따옴표 출력
+	}
+
+}

@@ -1,0 +1,42 @@
+package ch01;
+
+public class _03_Print {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		System.out.print("apple"); // 문자열 : 큰 따옴표 ""
+		System.out.print("banana");
+		System.out.print("orange");
+		System.out.println("");
+		
+		System.out.println(5); // 정수
+		System.out.println(5.987); // 실수
+		System.out.println('A'); // 문자 : 작은 따옴표 ''
+		
+		// 연산 결과 출력
+		System.out.println(3+5);
+		System.out.println(3.9 * 5.72);
+		System.out.println(10/3); // 정수의 나눗셈의 결과는 몫
+		System.out.println(10.0/3); // 실수의 나눗셈의 결과는 나머지
+		
+		// 문자열 상수와 다른 상수를 연결해서 출력
+		System.out.println("");
+		System.out.println("덧셈 결과는 : " + (3+5));
+		System.out.println("뺄셈 결과는 : " + (3 - 5) );
+		System.out.println("곱셈 결과는 : " + (3*5) + "입니다");
+		
+		// printf(format)
+		// %d : decimal : 10진 정수
+		// %f : float : 실수 (고정소수점 이하 6자리)
+		// %c : character :  문자
+		// %s : string : 문자열
+		System.out.printf("덧셈 결과는 %d 입니다.\n", 7+1234);
+		System.out.printf("%d + %d = %d", 3, 5, 3+5);
+		System.out.printf("실수는 %f입니다.\n", 3.7189); // 소수점 6자릭 고정
+		System.out.printf("실수는 %.1f입니다.\n", 3.7189); // 소수점 자리 2개
+		System.out.printf("문자 : %c\n", 'T');
+		System.out.printf("문자열 %s\n", "Write Once");
+	}
+
+}

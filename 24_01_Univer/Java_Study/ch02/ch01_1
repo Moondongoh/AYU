@@ -1,0 +1,19 @@
+package ch02;
+
+public class _01_Circle {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		final double PI = 3.141592; //원의 넓이 >> final 사용시 변수를 상수로 설정 상수는 대문자로 대부분 선언
+		// PI = 5; // 상수는 코드 중간에 수정이 불가하다.
+		double area, circumference; // 같은 타입의 변수를 연속으로 선언 가능
+		int radius = 5;
+		area = PI * radius * radius; // pi * r ^ 2
+		circumference = 2 * PI * radius; // 2*pi*r
+		
+		System.out.printf("radius의 값은 %d입니다.\n", radius);
+		System.out.println("원의 넓이는 "+ area + "입니다.");
+		System.out.println("원의 둘레는 "+ circumference + "입니다.");
+	}
+
+}

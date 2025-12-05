@@ -1,0 +1,64 @@
+package ch05;
+
+import java.util.Scanner;
+
+public class _02_IfElse {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner inp = new Scanner(System.in);
+		
+		/*
+		 * int kor; 
+		 * System.out.print("국어 성적 입력 : ");
+		 * kor = inp.nextInt();
+		 * 
+		 * int eng; 
+		 * System.out.print("영어 성적 입력 : "); 
+		 * eng = inp.nextInt();
+		 * 
+		 * int math; 
+		 * System.out.print("수학 성적 입력 : "); 
+		 * math = inp.nextInt();
+		 */
+		int kor, eng, math;
+		
+		System.out.print("국어 영어 수학 성적 입력 (공백 구분) : ");
+		
+		kor = inp.nextInt();
+		eng = inp.nextInt();
+		math = inp.nextInt();
+		
+		inp.close();
+		
+		
+//		  System.out.print("국어 점수는 : "+ kor + " 입니다"); 
+//		  System.out.print("영어 점수는 : "+eng + " 입니다"); 
+//		  System.out.print("수학 점수는 : "+ math + " 입니다");
+		 
+		
+//		if(kor >=60 && eng >=60 && math >= 60)
+//		{
+//			System.out.print("합격 입니다!");
+//		}
+//		else if( kor >=30 && eng >=30 && math >=30 )
+//		{
+//			System.out.print("재시험 입니다.");
+//		}
+//		else 
+//		{
+//			System.out.print("불합격 입니다ㅜ");
+//		}
+		
+		if(kor < 60 || eng < 60 || math < 60)
+		{
+			System.out.print("한 과목 이상 60점 미만으로 불합격 입니다.");
+		}
+		else 
+		{
+			System.out.print("모든 과목이 60점 이상으로 합격 입니다!");
+		}
+		
+	}
+
+}

@@ -1,0 +1,24 @@
+package ch04;
+
+public class _03_Casting {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//형 변환 연산자
+		
+		int a = 10;
+		int b = 3;
+		double re = a/b;
+		double er = (double)a/b; // 이 부분에서만 일시적으로 형 변환이 된다.
+		double rer = (double)(a/b);
+		
+		System.out.println("re= "+ re);
+		System.out.println("er= "+ er);
+		System.out.println("rer= "+ rer);
+		
+		double d = 3.92;
+		int deci = (int)d;
+		System.out.println("정수 값= "+ deci);
+	}
+
+}

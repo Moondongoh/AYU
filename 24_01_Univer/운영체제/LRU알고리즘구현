@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define CACHE_SIZE 5
+
+typedef struct
+{
+    int value;
+} CacheEntry;
+
+void initCache(CacheEntry cache[]);
+void displayCache(CacheEntry cache[]);
+int findCacheIndex(CacheEntry cache[], int value);
+void accessCache(CacheEntry cache[], int value);
+
+int main()
+{
+    srand(time(NULL));  // 랜덤 시드 초기화
+
+    CacheEntry cache[CACHE_SIZE];
+    initCache(cache);   // 캐시 초기화
+
+    for (int i = 0; i < 10; i++)
+    {
+        int value = rand() % 10 + 1;    // 랜덤한 값 생성 (1-10)
+        printf("[%d]값 접근 중: %d\n",i+1, value);
+        accessCache(cache, value);      // 캐시 접근
+        displayCache(cache);            // 캐시 상태 출력
+    }
+
+    return 0;
+}
+
+void initCache(CacheEntry cache[])
+{
+    for (int i = 0; i < CACHE_SIZE; i++)
+    {
+        cache[i].value = -1;    // 빈 캐시 항목 표시
+    }
+}
+
+void displayCache(CacheEntry cache[])
+{
+    printf("캐시 내용   :  ");
+    for (int i = 0; i < CACHE_SIZE; i++)
+    {
+        if (cache[i].value != -1) {
+            printf("%d ", cache[i].value);
+        }
+        else
+        {
+            printf("E ");   // 비어 있는 캐시 항목 표시
+        }
+    }
+    printf("\n\n");
+}
+
+int findCacheIndex(CacheEntry cache[], int value)
+{
+    for (int i = 0; i < CACHE_SIZE; i++)
+    {
+        if (cache[i].value == value)
+        {
+            return i;   // 캐시에서 해당 값의 인덱스를 반환
+        }
+    }
+    return -1;  // 값이 캐시에 없는 경우 -1 반환
+}
+
+void accessCache(CacheEntry cache[], int value)
+{
+    int index = findCacheIndex(cache, value); // 캐시에서 해당 값의 인덱스를 찾음
+
+    if (index != -1)
+    {
+        // 해당 값이 캐시에 이미 존재하는 경우
+        for (int i = index; i > 0; i--)
+        {
+            cache[i].value = cache[i - 1].value;    // 해당 값을 캐시의 맨 앞으로 이동
+        }
+        cache[0].value = value; // 해당 값을 캐시의 맨 앞으로 위치시킴
+    }
+    else
+    {
+        // 해당 값이 캐시에 존재하지 않는 경우
+        for (int i = CACHE_SIZE - 1; i > 0; i--)
+        {
+            cache[i].value = cache[i - 1].value;    // 캐시의 모든 값을 한 칸씩 뒤로 이동
+        }
+        cache[0].value = value; // 새로운 값 캐시의 맨 앞에 추가
+    }
+}

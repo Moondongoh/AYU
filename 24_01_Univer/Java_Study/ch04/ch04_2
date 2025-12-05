@@ -1,0 +1,22 @@
+package ch04;
+
+import java.util.Scanner;
+
+public class _02_If {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner inp = new Scanner(System.in);
+		int n1, n2;
+		System.out.print("두 수 입력: ");
+		n1 = inp.nextInt();
+		n2 = inp.nextInt();
+		inp.close();
+		
+		int large;
+		large = n1 > n2 ? n1 : n2; //조건 ? 참 : 거짓 ; << 조건 연산자 n1이 n2가 큰 것이 참이다? 그러면 n1 거짓이면 n2로
+		
+		System.out.println("두 수중 큰 수는" + large + "입니다.");
+	}
+
+}
