@@ -47,11 +47,11 @@ def update_class_id(target_folders, old_class_id, new_class_id):
                     print(f"'{filename}' 파일의 클래스 ID를 변경했습니다.")
                     total_files_modified += 1
 
-    print("\n" + "=" * 40)
+    print("\n" + "=" * 30)
     print("작업이 완료되었습니다.")
     print(f"총 {total_files_modified}개의 파일을 수정했습니다.")
     print(f"총 {total_lines_changed}개의 라인을 변경했습니다.")
-    print("=" * 40)
+    print("=" * 30)
 
 
 if __name__ == "__main__":
