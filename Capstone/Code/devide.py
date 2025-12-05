@@ -72,6 +72,6 @@ for image_file in val_files:
         os.path.join(val_dir, "labels", label_file),
     )
 
-print("데이터 분할이 완료되었습니다.")
+print("데이터 분할이 완료.")
 print(f"Train 세트: {len(train_files)}개 파일")
 print(f"Validation 세트: {len(val_files)}개 파일")
