@@ -7,7 +7,7 @@ from ultralytics import YOLO
 
 model = YOLO(r"D:\MDO\fall_hat\safety_model_results\new_dataset_exp01\weights\best.pt")
 
-# 0번 --> 기본 카메라 열기
+# 0번 ---> 기본 카메라 열기
 cap = cv2.VideoCapture(0)
 
 if not cap.isOpened():
