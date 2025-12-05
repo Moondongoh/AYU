@@ -115,6 +115,6 @@ IDE/환경: VSCode (launch.json, settings.json 설정 포함)
 
 모바일 환경 최적화
 
-YOLO 모델 경량화 및 성능 개선
-
 온디바이스AI를 위한 최적화
+
+YOLO 모델 경량화 및 성능 개선
