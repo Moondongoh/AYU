@@ -1,8 +1,8 @@
-// 파일명: client.c
 #include "chat.h"
 
 int sock;
 char my_name[NAME_LEN];
+char saved_filename[100]; // 파일 이름 저장용 전역 변수
 
 // 파일 전송 함수
 void send_file(char *target, char *filename) {
@@ -87,24 +87,29 @@ int main(int argc, char *argv[]) {
                 printf("%s", pkt.data);
             } else if (pkt.type == MSG_FILE_START) {
                 printf("Receiving file '%s' from %s...\n", pkt.data, pkt.source);
+                
+                // 파일 이름을 미리 저장
+                strcpy(saved_filename, pkt.data); 
+                
                 char new_filename[100];
-                sprintf(new_filename, "recv_%s", pkt.data); // recv_파일명 으로 저장
+                sprintf(new_filename, "recv_%s", saved_filename); 
                 recv_fp = fopen(new_filename, "wb");
+
             } else if (pkt.type == MSG_FILE_DATA) {
                 if (recv_fp) fwrite(pkt.data, 1, pkt.data_len, recv_fp);
+
             } else if (pkt.type == MSG_FILE_END) {
                 if (recv_fp) {
                     fclose(recv_fp);
                     recv_fp = NULL;
-                    printf("File saved.\n");
-                    // [재생 기능] 리눅스 명령어 호출 (mp3/mp4)
-                    // 라즈베리파이/리눅스 기본 플레이어 실행
-                    // 영상 캡처 시 이 부분이 실행되는 것을 보여주면 됨
+                    printf("File saved: recv_%s\n", saved_filename);
+
+                    // 저장해둔 이름(saved_filename)을 사용해서 재생
                     char cmd[200];
-                    printf("Playing media...\n");
-                    // sprintf(cmd, "omxplayer recv_%s", pkt.data); // 라즈베리파이 전용
-                    sprintf(cmd, "xdg-open recv_%s &", pkt.data); // 일반 리눅스
-                    system(cmd);
+                    
+                    // [재생 명령] 리눅스 기본 실행 (xdg-open)
+                    sprintf(cmd, "xdg-open recv_%s &", saved_filename);
+                    system(cmd); 
                 }
             }
         }
@@ -121,7 +126,6 @@ int main(int argc, char *argv[]) {
                 pkt.type = MSG_LIST;
                 send(sock, &pkt, sizeof(Packet), 0);
             } else if (strncmp(buf, "/w ", 3) == 0) {
-                // /w name message parsing
                 char *cmd = strtok(buf, " ");
                 char *target = strtok(NULL, " ");
                 char *msg = strtok(NULL, "");
@@ -135,7 +139,6 @@ int main(int argc, char *argv[]) {
                     printf("Usage: /w <user> <message>\n");
                 }
             } else if (strncmp(buf, "/file ", 6) == 0) {
-                // /file name filename
                 char *cmd = strtok(buf, " ");
                 char *target = strtok(NULL, " ");
                 char *fname = strtok(NULL, " ");
