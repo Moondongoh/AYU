@@ -1,7 +1,7 @@
 # data.yaml
 
-train: r"C:\GIT\Capstone\Dataset\train\images"
-val: r"C:\GIT\Capstone\Dataset\val\images"
+train: r"경로지정"
+val: r"경로지정"
 
 nc: 5
 
