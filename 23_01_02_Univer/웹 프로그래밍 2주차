@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>나의 셀카</title>
+        <style>
+            h2 {
+                text-align: center;
+                color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>나의 셀카</h1>
+        <hr>
+        <h2>나의 셀카</h2>
+        <img src="1.jpg" width="150" height="200" alt="나의 셀카">
+        <img src="2.jpg" width="150" height="200" alt="나의 셀카">
+        <img src="3.jpg" width="150" height="200" alt="나의 셀카">
+    </body>
+</html>

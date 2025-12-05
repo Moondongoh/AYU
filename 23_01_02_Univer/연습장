@@ -1,0 +1,347 @@
+#include <stdio.h>
+#include<time.h>
+#include<stdlib.h>
+
+int main() 
+{
+	//정수형 변수에 대한 예제
+	/*int age = 12;
+	printf("나이는 %d입니다.\n", age);
+	age = 13;
+	printf("나이는 %d입니다.\n", age);*/
+
+	//실수형 변수에 대한 예제
+	/*float f = 46.5f;
+	printf("%.2f\n", f);
+	//소수점 정해서 .?lf로 적어주면 반올림 해줍니다.
+	double d = 4.428;      
+	printf("%.2lf\n", d);*/
+
+	//상수 정의 방법
+	/*const int YEAR = 2000;
+	printf("태어난 연도는 %d년 입니다.\n", YEAR);
+	//상수 설정시 값 변경이 안됨.
+	YEAR = 2001;
+	printf("태어난 연도는 %d년 입니다.\n", YEAR);*/
+
+	/*int add = 3 + 7;
+	printf("3+7=%d\n", add);
+	printf("%d * %d = %d", 38, 34, 38 * 34);*/
+
+	//int input;
+	//printf("값을 입력하세요 :");
+	//scanf_s("%d", &input);
+	//printf("입력 된 값은 : %d 입니다 \n", input);
+
+	/*int one, two, three;
+	printf("3개의 정수를 입력하세요 : ");
+	scanf_s("%d %d %d", &one,&two,&three);
+	printf("첫번째 값 : %d\n",one);
+	printf("두번째 값 : %d\n",two);
+	printf("세번째 값 : %d\n",three);*/
+
+	//문자(한 글자), 문자열(한 글자 이상의 여러 글자)
+	/*char c = 'A';
+	printf("%c", c);*/
+
+	/*char str[256];
+	printf("문자열을 입력하세요 :");
+	scanf_s("%s", str, sizeof(str));
+	printf("입력된 글 : %s\n", str);*/
+
+	//이름,나이,성별,몸무게,키,범죄명 입력 받기
+	//char name[256];
+	//printf("이름은? :");
+	//scanf_s("%s", name, sizeof(name));
+
+	//char reason[256];
+	//printf("이유는? :");
+	//scanf_s("%s", reason, sizeof(reason));
+
+	//char sex[256];
+	//printf("성별은? :");
+	//scanf_s("%s", sex, sizeof(sex));
+
+	//int age;
+	//printf("나이는? :");
+	//scanf_s("%d", &age);
+
+	//double kg;
+	//printf("몸무게는?(소숫점2자리까지) :");
+	//scanf_s("%lf", &kg);
+
+	//double height;
+	//printf("키는?(소숫점2자리까지) :");
+	//scanf_s("%lf", &height);
+
+	//printf("이름 :%s\n", name);
+	//printf("이유 :%s\n", reason);
+	//printf("성별 :%s\n", sex);
+	//printf("나이 :%d\n",age);
+	//printf("몸무게 :%.2lf\n", kg);
+	//printf("키 :%.2lf\n", height);
+
+	//++ 
+	//int a = 10;
+	//printf("a는 %d\n", a);
+	//a++;
+	//printf("a는 %d\n", a);
+	//a++;
+	//printf("a는 %d\n", a);
+
+	//int b = 20;
+	//printf("b는 %d\n", ++b); //++하고 
+	//printf("b는 %d\n", b++); //문장 후 ++ 출력하고 값을 올림
+	//printf("b는 %d\n", b);
+
+	//반복문
+	//for, while, do while
+
+	//for (선언 : , 조건, 증감) 
+	//{
+
+	//}
+
+	//for (int i = 1; i <= 10; i++) 
+	//{
+	//	printf("Hello World %d\n", i);
+	//}
+
+	//while (조건){}
+	//int i = 1;
+	//while (i <= 10)
+	//{
+	//	printf("Hello World %d\n", i++);
+	//	//i++;
+	//}
+
+	//do {} while (조건);
+	//int i = 1;
+	//	do {
+	//		printf("Hello World %d\n", i++);
+	//	} while (i <= 10);
+
+	//이중 반복문
+	//for (int i = 1; i <= 3; i++)
+	//{
+	//	printf("첫번째 반복문 : %d\n", i);
+
+	//	for (int j = 1; j <= 3; j++)
+	//	{
+	//		printf("  두번째 반복문 : %d\n", j);
+	//	}
+	//}
+	
+	//구구단
+	//for (int i = 2; i < 10; i++)
+	//{
+	//	printf("-----%d단-----\n", i);
+	//	for (int j = 1; j < 10; j++)
+	//	{
+	//		printf("%d * %d = %d\n", i, j, i * j);
+	//	}
+	//}
+
+	//for (int i = 1; i <= 10; i++)
+	//{
+	//	printf("%d\n", i);
+	//}
+
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	for (int j = 0; j <= i; j++)
+	//	{
+	//		printf("*");
+	//	}
+	//	printf("\n");
+	//}
+
+	//for (int i = 5; 1<=i; i--)
+	//{
+	//	for (int j = 0; j <= i; j++)
+	//	{
+	//		printf("*");
+	//	}
+	//	printf("\n");
+	//}
+	//for (int i = 0; i <5; i++)
+	//{
+	//	for (int j = i; j < 5 - 1; j++)
+	//	{
+	//		printf(" ");
+	//	}
+	//	for (int k = 0; k <= i; k++)
+	//	{
+	//		printf("*");
+	//	}
+	//	printf("\n");
+	//}
+
+	//피라미드 쌓기
+	//int floor;
+	//printf("몇 층 까지 쌓을 것인가?:");
+	//	scanf_s("%d", &floor);
+	//printf("%d층 까지 쌓겠습니다.\n", floor);
+
+	//for (int i = 0; i < floor; i++)
+	//{
+	//	for (int j = i; j < floor - 1; j++)
+	//	{
+	//		printf(" ");
+	//	}
+	//	for (int k = 0; k < i*2+1; k++)
+	//	{
+	//		printf("*");
+	//	}
+	//	printf("\n");
+	//}
+
+	//int age = 25;
+	//if (age >= 20) {
+	//	printf("일반인 입니다\n");
+	//}
+	//else {
+	//	printf("학생입니다\n");
+	//}
+	//초등학생(8~13) / 중학생(14~16) / 고등학생(17~19) // if / else if / else
+	//int age = 8;
+	//if (age >= 8 && age <= 13) {
+	//	printf("초등학생입니다\n");
+	//}
+	//else if (age >= 14 && age <= 16) {
+	//	printf("중학생입니다\n");
+	//}
+	//else if (age >= 17 && age <= 19) {
+	//	printf("고등학생입니다\n");
+	//}
+	//else {
+	//	printf("학생이 아닌가 봅니다\n");
+	//}
+	
+	//break / continue
+	//1번부터 30번까지 있는 반에서 1번에서 5번까지 조별 발표를 합니다.
+
+	//for(int i =1; i<=30; i++)
+	//{
+	//	if (i >= 6)
+	//	{
+	//		printf("나머지 학생은 집에 가세요\n");
+	//		break;
+	//	}
+	//	printf("%d번 학생은 발표 준비를 하세요\n", i);
+	//}
+
+	//1번부터 30번까지 있고 7번은 결석
+	//7번을 제외하고 6번부터 10번 조별 발표
+
+	//for (int i = 1; i <= 30; i++)
+	//{
+	//	if (i >= 6 && i <= 10)
+	//	{
+	//		if (i == 7)
+	//		{
+	//			printf("%d번 학생은 결석 했습니다\n", i);
+	//			continue;
+	//		}
+	//		printf("%d번 학생은 조별 발표를 준비하세요\n", i);
+	//	}	
+	//}
+
+	// &&][and] // ||[or]
+	//int a = 11;
+	//int b = 10;
+	//int c = 12;
+	//int d = 12;
+	//if (a == b || c == d)
+	//{
+	//	printf("a와 b 혹은 c와 d의 값이 같습니다\n");
+	//}
+	//else
+	//{
+	//	printf("값이 서로 다릅니다\n");
+	//}
+	//srand(time(NULL)); // 난수 초기화하는 코드
+	//int num = rand() % 3+1; // 1,2,3
+
+	//printf("난수 초기화 이전..\n"); // 초기화 하지 않으면 계속 같은 값만 나옵니다.
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	printf("%d", rand() % 10);
+	//}
+
+
+	//srand(time(NULL));
+	//printf("\n난수 초기화 이후..\n"); //난수 초기화 후 계속 수 바뀝니다.
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	printf("%d", rand() % 10);
+	//}
+
+	//가위 바위 보 게임
+	//srand(time(NULL));
+	//int i = rand() % 3 + 1;
+	//switch (i)
+	//{ 
+	//case 1:printf("가위\n"); break; // break를 넣어주는 이유 break넣지 않는다면 case 1이 나오면 그 뒤는 생각 하지 않고 출력하기에 해당 값 도출 후 break로 탈출
+	//case 2:printf("바위\n"); break;
+	//case 3:printf("보자기\n"); break;
+	//default:printf("아 몰랑\n"); break;
+	//}
+
+	//int age = 18;
+	//switch (age)
+	//{
+	//case 8:
+	//case 9:
+	//case 10:
+	//case 11:
+	//case 12:
+	//case 13:printf("초등학생 입니다\n"); break;
+	//case 14:
+	//case 15:
+	//case 16:printf("중학생 입니다\n"); break;
+	//case 17:
+	//case 18:
+	//case 19:printf("고등학생 입니다\n"); break;
+	//default:printf("학생이 아닌가 봐용\n"); break;
+	//}
+
+	//UP AND DOWN
+
+	//srand(time(NULL));
+	//int num = rand() % 100 +1 ; 
+	//printf("랜덤 수는 :%d입니다\n", num);
+	//int ans = 0;
+	//int chance = 5;
+	//while (chance > 0)
+	//{
+	//	printf("남은 기회는 %d번 입니다\n", chance--);
+	//	printf("랜덤 수를 맞춰보세요 (1~100):");
+	//	scanf("%d", &ans);
+
+	//	if (ans > num)
+	//	{
+	//		printf("Down\n");
+	//	}
+	//	else if (ans < num)
+	//	{
+	//		printf("Up\n");
+	//	}
+	//	else if (num == ans)
+	//	{
+	//		printf("정답입니다\n");
+	//		break;
+	//	}
+	//	else
+	//	{
+	//		printf("알 수 없는 오류가 발생했습니다\n");
+	//	}
+
+	//	if (chance == 0)
+	//	{
+	//		printf("모든 기회를 소진 하셨습니다\n");
+	//		break;
+	//	}
+	//}
+	return 0;
+}

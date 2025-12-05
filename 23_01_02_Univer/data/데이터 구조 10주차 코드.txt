@@ -1,0 +1,97 @@
+#pragma warning(disable:4996)
+#include <stdio.h>
+
+#define ROWS 11
+#define COLS 11
+
+int map[ROWS][COLS]; // 2차원 배열미로 구조 설명
+int map2[ROWS][COLS];
+int map3[ROWS][COLS];
+
+int sw = 0;
+
+void dfs(int i, int j) {
+    if (map[i][j] == 0) {
+        if (i == 9 && j == 9) { // <<출구
+            sw = 1;
+        }
+        else if (map[i][j] == 0) { // 출구가 아니면서 벽이 아닌 경우
+            map[i][j] = 1; // 벽으로 만들고
+
+            if (sw == 0)
+                dfs(i + 1, j); // 하 밑으로 이동
+            if (sw == 0)
+                dfs(i, j + 1); // 우 오른쪽으로 이동
+            if (sw == 0)
+                dfs(i, j - 1); // 좌 왼쪽으로 이동
+            if (sw == 0)
+                dfs(i - 1, j); // 상 위로 이동
+
+            map[i][j] = 0; // 벽을 풀어주고 다시 길로 만들어줌
+        }
+    }
+
+    if (sw == 1) {
+        printf("(%d,%d)\n", i, j);
+    }
+}
+
+void readMazeFromFile(const char* filename) { //data.txt에 저장된 파일을 읽기
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("파일을 열 수 없습니다.\n");
+        return;
+    }
+    // 첫 번째 미로 읽기
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            fscanf_s(file, "%d", &map[i][j]);
+        }
+    }
+    // 두 번째 미로 읽기
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            fscanf_s(file, "%d", &map2[i][j]);
+        }
+    }
+    // 세 번째 미로 읽기
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            fscanf_s(file, "%d", &map3[i][j]);
+        }
+    }
+
+    fclose(file);
+}
+
+int main(void) {
+    readMazeFromFile("data.txt");
+
+    // 첫 번째 미로 탐색
+    dfs(1, 1); //시작점
+
+    if (sw == 0)
+        printf("첫 번째 미로 출구없음\n");
+
+    readMazeFromFile("data1.txt");
+
+    // 두 번째 미로 탐색
+    sw = 0; // sw 변수 초기화
+    dfs(1, 1);
+
+    if (sw == 0)
+        printf("두 번째 미로 출구없음\n");
+
+    readMazeFromFile("data2.txt");
+
+    // 세 번째 미로 탐색
+    sw = 0; // sw 변수 초기화
+    dfs(1, 1);
+
+    if (sw == 0)
+        printf("세 번째 미로 출구없음\n");
+
+
+    return 0;
+}
+

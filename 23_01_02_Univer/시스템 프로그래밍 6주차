@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+// 함수를 사용하여 단어의 종류를 판별
+char* getWordType(char* word) {
+    if (strcmp(word, "MOV") == 0 || strcmp(word, "ADD") == 0 || strcmp(word, "CMP") == 0) {
+        return "cmd";
+    }
+    else if (strcmp(word, "AX") == 0 || strcmp(word, "BX") == 0 || strcmp(word, "CX") == 0 || strcmp(word, "DX") == 0) {
+        return "R16";
+    }
+    else if (strcmp(word, "AH") == 0 || strcmp(word, "AL") == 0 || strcmp(word, "BH") == 0 || strcmp(word, "BL") == 0 || strcmp(word, "CH") == 0 || strcmp(word, "CL") == 0 || strcmp(word, "DH") == 0 || strcmp(word, "DL") == 0) {
+        return "R8";
+    }
+    else if (isdigit(word[0]) || (word[0] == '-' && isdigit(word[1]))) {
+        return "num";
+    }
+    return "symb";
+}
+
+int main() {
+    FILE* file = fopen("assembly_code.txt", "r");
+    char line[256];
+    while (fgets(line, sizeof(line), file)) {
+        printf("\n%s", line); // 현재 줄 출력
+        char* word = strtok(line, " ,:\t\n");
+        while (word != NULL) {
+            char* type = getWordType(word);
+            printf("%s\t",type);
+            word = strtok(NULL, " ,:\t\n");
+        }
+    }
+    fclose(file);
+    return 0;
+}

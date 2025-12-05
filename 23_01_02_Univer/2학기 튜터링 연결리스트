@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+
+typedef struct D_Node
+{
+    int data;
+    struct D_Node* next;
+} A_Node;
+
+void addNode(A_Node* head, int data);
+void deleteNode(A_Node* head);
+void printList(A_Node* head);
+
+int main()
+{
+    A_Node* head = (A_Node*)malloc(sizeof(A_Node));
+    head->next = NULL;
+
+    int select;
+    int data;
+
+    while (1)
+    {
+        printf("1. 데이터 추가\n");
+        printf("2. 데이터 삭제\n");
+        printf("3. 현재 리스트 출력\n");
+        printf("4. 종료\n");
+        printf("선택: ");
+        scanf_s("%d", &select);
+        printf("\n\n");
+
+        if (select == 1)
+        {
+            printf("추가할 데이터를 입력하세요 :  ");
+            if (scanf_s("%d", &data) != 1)
+            {
+                printf("잘못된 값을 입력 했습니다\n");
+                while (getchar() != '\n');
+                continue;
+            }
+            addNode(head, data);
+            printf("\n");
+            system("cls");
+        }
+
+        else if (select == 2)
+        {
+            printf("노드를 삭제합니다.\n");
+            deleteNode(head);
+        }
+
+        else if (select == 3)
+        {
+            printf("현재 리스트 상태는 : ");
+            printList(head);
+        }
+
+        else if (select == 4)
+        {
+            printf("프로그램을 종료 합니다.\n");
+            break;
+        }
+        else
+        {
+            printf("잘못된 선택입니다. 다시 선택하세요.\n");
+        }
+    }
+
+    // 메모리 해제
+    while (head != NULL)
+    {
+        A_Node* cur = head;
+        head = head->next;
+        free(cur);
+    }
+
+    return 0;
+}
+// □(head) ->  □(A) 이렇게 있다가 □(head) □(new) □(A) 
+void addNode(A_Node* head, int data)
+{
+    A_Node* newNode = (A_Node*)malloc(sizeof(A_Node)); // 새로운 노드 할당함.
+    newNode->data = data;                              // 새로운 노드에 데이터 넣기 위에서 받은 data
+    newNode->next = head->next;                        // 새로운 노드의 다음 노드를 현재 헤드 다음 노드로 설정
+    head->next = newNode;                              // 현재 헤드의 다음 노드를 새노드로
+}
+
+void deleteNode(A_Node* head)
+{
+    if (head->next == NULL)                            // 다음 노드가 널이다? 그럼 리스트 빈거임
+    {
+        printf("삭제할 노드가 없습니다.\n");
+        return;
+    }
+    // erase 삭제한 노드를 가르키는 포인터
+    // erase 를 헤드의 다음 노드로 초기화
+    // 헤드 다음 노드를 erase 다음 노드로 설정해 있던거 지움
+    A_Node* erase = head->next;
+    // □ □ □ 
+    head->next = erase->next;
+    printf("삭제된 데이터: %d\n", erase->data);
+    free(erase);
+}
+
+void printList(A_Node* head)
+{
+    A_Node* cur = head->next;
+
+    while (cur != NULL)
+    {
+        printf("%d ", cur->data);
+        cur = cur->next;
+    }
+    printf("\n");
+}

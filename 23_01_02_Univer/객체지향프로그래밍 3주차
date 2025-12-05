@@ -1,0 +1,30 @@
+#include<iostream>
+using namespace std;
+
+class Reatangle {
+public:
+	int radius;
+	Reatangle();
+	Reatangle(int r);
+	double getArea();
+
+};
+
+Reatangle::Reatangle() : Reatangle(1){ }
+
+Reatangle::Reatangle(int r) {
+	radius = r;
+	cout << "반지름" << radius << "원 생성" << endl;
+}
+double Reatangle::getArea() {
+	return 3.14 * radius * radius;
+}
+
+
+int main() {
+	Reatangle rect;
+	cout << "원의 면적" << rect.getArea() << endl;
+	Reatangle rect2(8);
+	cout << "원의 면적" << rect2.getArea() << endl;
+
+}

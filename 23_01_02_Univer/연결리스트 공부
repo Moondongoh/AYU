@@ -1,0 +1,94 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+/*
+* 노드에는 데이터가 들어갈 데이터 변수
+* 다음 노드를 가리킬 포인터 변수가 있어야함
+* 구조체의 별칭은 D_Node로함.
+* 연결리스트의 맨 앞 노드는 head라 부르며
+* head는 첫번째 노드를 가리키고 있어야함.
+* (첫번째 노드의 주소를 갖고 있어야한다)
+*/
+typedef struct Node
+{
+	int data;
+	struct Node* next;
+}D_Node;
+
+D_Node* head = NULL;
+
+int main()
+{
+	D_Node* head = NULL;
+	D_Node* tail = NULL;
+	D_Node* cur = NULL;
+
+	D_Node* newNode = NULL;
+	int readData;
+
+	// 데이터를 입력 받는 과정
+	while (1)
+	{
+		printf("숫자 입력: ");
+		scanf_s("%d", &readData);
+		if (readData < 1) {
+			break;
+		}
+
+		// 노드의 추가 과정 : 노드 생성 □(readData)□(NULL)
+		newNode = (D_Node*)malloc(sizeof(D_Node));
+		newNode->data = readData;
+		newNode->next = NULL;
+
+		// 노드끼리의 연결
+		if (head == NULL)
+			head = newNode;
+		else
+			tail->next = newNode;
+
+		tail = newNode;
+	}
+	printf("\n");
+
+	// 입력 받은 데이터의 출려과정
+	printf("입력 받은 데이터의 전체출력.\n");
+	if (head == NULL)
+	{
+		printf("저장된 숫자가 없습니다.\n");
+	}
+	else
+	{
+		cur = head;
+		printf("%d", cur->data);
+
+		while (cur->next != NULL)
+		{
+			cur = cur->next;
+			printf("%d", cur->data);
+		}
+	}
+	printf("\n\n");
+
+	// 메모리의 해제과정
+	if (head == NULL)
+	{
+		return 0; // 해제할 노드 x
+	}
+	else
+	{
+		D_Node* deleteNode = head;
+		D_Node* deleteNextNode = head->next;
+		printf("%d를 삭제합니다.\n", head->data);
+		free(deleteNode); // 첫 번째 노드 삭제
+
+		while (deleteNextNode != NULL)
+		{
+			deleteNode = deleteNextNode;
+			deleteNextNode = deleteNextNode->next;
+
+			printf("%d를 삭제합니다.\n", deleteNode->data);
+			free(deleteNode);
+		}
+	}
+	return 0;
+}

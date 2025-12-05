@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    FILE* file = fopen("a.txt", "r");
+    if (file == NULL) {
+        perror("파일을 열 수 없습니다");
+        return 1;
+    }
+
+    char word[100];  // 단어를 읽을 버퍼
+    while (fscanf(file, "%99s", word) == 1) {
+        // 단어가 숫자인지 체크
+        int is_num = 1;
+        for (int i = 0; word[i] != '\0'; i++) {
+            if (!isdigit(word[i])) {
+                is_num = 0;
+                break;
+            }
+        }
+
+        // 단어가 "레지스터"인지 체크
+        int is_reg = (strcmp(word, "AX") == 0);
+
+        // 단어 출력
+        if (is_num) {
+            printf("[num] ");
+        }
+
+        else if (strcmp(word, "AX") == 0 || strcmp(word, "BX") == 0 || strcmp(word, "CX") == 0 || strcmp(word, "DX") == 0) {
+            printf("[reg] ");
+        }
+        else {
+            printf("[abc] ");
+        }
+    }
+
+    fclose(file);
+
+    return 0;
+}

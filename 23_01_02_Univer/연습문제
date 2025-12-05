@@ -1,0 +1,36 @@
+#include<stdio.h>
+
+int main(void) 
+{
+	int  x;
+	int  y;
+	int  z;
+	int  i;
+	int  sum;
+	int  c;
+	int  t;
+
+	printf("두 개의 정수를 입력:");
+	scanf_s("%d %d", &c, &t);
+
+	printf("여행은 몇박인가요?:");
+	scanf_s("%d", &x);
+
+	printf("항공권 가격:");
+	scanf_s("%d", &y);
+
+	printf("호텔 1박:");
+	scanf_s("%d", &z);
+
+	printf("하루의 필요한 용돈:");
+	scanf_s("%d", &i);
+
+	printf("%d * %d = %d \n", 2, 3, 2 * 3);
+
+	printf("%d %#x %#o \n", 128, 128, 128);
+
+	sum = y+ x * z + x * i;
+	printf("총 여행 경비= %d \n", sum);
+
+	return 0;
+}

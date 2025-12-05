@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LINES 5
+#define MAX_LINE_LENGTH 200
+
+int compareStrings(const void* a, const void* b) {
+    return strcmp(*(const char**)a, *(const char**)b);
+}
+
+int main() {
+    FILE* file;
+    char filename[] = "d.txt";
+    char lines[MAX_LINES][MAX_LINE_LENGTH];
+    char* words[MAX_LINES * MAX_LINE_LENGTH];
+    char searchWord[MAX_LINE_LENGTH];
+    int wordCount = 0;
+
+    file = fopen(filename, "r");
+
+    if (file == NULL) {
+        printf("파일을 열 수 없습니다.\n");
+        return 1;
+    }
+
+    for (int i = 0; i < MAX_LINES; i++) {
+        if (fgets(lines[i], sizeof(lines[i]), file) == NULL) {
+            break;
+        }
+    }
+
+    fclose(file);
+
+    for (int i = 0; i < MAX_LINES; i++) {
+        char* word = strtok(lines[i], " \t\n");
+        while (word != NULL) {
+            words[wordCount++] = strdup(word);
+            word = strtok(NULL, " \t\n");
+        }
+    }
+
+    qsort(words, wordCount, sizeof(char*), compareStrings);
+
+    printf("정렬된 단어 목록:\n");
+    for (int i = 0; i < wordCount; i++) {
+        printf("%s\n", words[i]);
+    }
+
+    printf("검색할 단어를 입력하세요: ");
+    scanf("%s", searchWord);
+
+    int left = 0;
+    int right = wordCount - 1;
+    int foundIndex = -1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        int cmp = strcmp(words[mid], searchWord);
+
+        if (cmp == 0) {
+            foundIndex = mid;
+            break;
+        }
+        else if (cmp < 0) {
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+
+    if (foundIndex != -1) {
+        printf("'%s'는 정렬된 단어 목록의 %d번째 단어입니다.\n", searchWord, foundIndex + 1);
+    }
+    else {
+        printf("'%s'는 단어 목록에서 찾을 수 없습니다.\n", searchWord);
+    }
+
+    for (int i = 0; i < wordCount; i++) {
+        free(words[i]);
+    }
+
+    return 0;
+}

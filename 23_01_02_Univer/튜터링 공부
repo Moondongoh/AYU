@@ -1,0 +1,52 @@
+#include<stdio.h>
+
+typedef struct Node
+{
+	int num;
+	struct Node* next;
+
+}Node;
+/*
+* 숫자를 입력하면 노드를 생성해서 집어 넣어
+* 만약 삭제를 하게되면 뒤 노드부터 삭제
+* 배열에 저장?
+* 노드에 저장?
+* while문 이용
+* 
+*/
+int main()
+{
+	int select;
+	int input_num;
+
+	printf("1. 데이터를 추가 합니다.\n");
+	printf("2. 데이터를 삭제 합니다.\n");
+	printf("3. 프로그래을 종료 합니다.\n");
+	printf("번호를 선택하세요 :");
+	scanf_s("%d", &select);
+	printf("입력하신 번호는 %d번 입니다\n", select);
+
+	while (1)
+	{
+		if (select == 1)
+		{
+			printf("데이터를 추가합니다 추가할 값은 : ");
+			scanf_s("%d", &input_num);
+			printf("입력된 수는 %d 입니다.\n", input_num);
+		}
+		else if (select == 2)
+		{
+			printf("데이터를 삭제 합니다 추가할 값은 : ");
+			scanf_s("%d", &input_num);
+			printf("입력된 수는 %d 입니다.\n", input_num);
+		}
+		else
+		{
+			printf("프로그램을 종료합니다.\n");
+			exit(0);
+		}
+	}
+	
+
+	return 0;
+}

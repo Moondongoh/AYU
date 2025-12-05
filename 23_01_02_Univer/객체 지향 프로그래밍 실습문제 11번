@@ -1,0 +1,53 @@
+#include<iostream>
+#include<cstring>
+#include<string>
+using namespace std;
+
+class Book {
+    string title; // 제목 문자열 
+    int price; // 가격 
+public:
+    Book(string title, int price);
+    void set(string title, int price);
+    void show() { cout << title << ' ' << price << "원" << endl; }
+};
+
+Book::Book(string title, int price) {
+    this->price = price;
+    this->title = title;
+}
+/*
+Book::Book(const Book& book) {
+    this->price = book.price;
+    int len = strlen(book.title);
+    this->title = new char[len + 1];
+    strcpy(this->title, book.title);
+}
+
+    Book::~Book() {
+        delete[] title;
+    }
+
+/*
+Book::Book(const char* title, int price) { // 디폴트 복사 생성자 구현
+    this->price =  price;                  //값을 this에 저장
+    int len = strlen(title);               //title의 문자열 갯수?
+    this->title = new char[len+1];         //title 문자열 공간 할당
+    strcpy(this->title, title);            //title에 price값 저장?
+}
+*/
+
+void Book::set(string title, int price) {
+               // 현재 객체에 title에 메모리가 할당되어 책 이름이 적혀있는 상황
+              //현재 title에 할당된 메모리 반환
+    this->price = price;
+    this->title = title;          //객체 생성??
+}
+int main() {
+    Book cpp("명품 C++", 10000);
+    Book java = cpp; // 복사 생성자 호출됨 
+    java.set("명품자바", 12000);
+    cpp.show();
+    java.show();
+}
+

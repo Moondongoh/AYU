@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+int is_word_char(char ch) {
+    // 단어 문자 여부를 판별하는 함수
+    return isalpha(ch) || isdigit(ch);
+}
+
+int main() {
+    char filename[] = "a.txt";
+    char word[] = "ago";
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return 1;
+    }
+
+    char buffer[100];  // 단어가 저장될 버퍼
+    int wordCount = 0;  // 발견된 단어 수
+
+    while (fscanf(file, "%99s", buffer) != EOF) {
+        int length = strlen(buffer);
+
+        // 단어 뒤의 특수 문자 제거
+        while (length > 0 && !is_word_char(buffer[length - 1])) {
+            buffer[length - 1] = '\0';
+            length--;
+        }
+
+        if (strcmp(buffer, word) == 0) {
+            wordCount++;
+            printf("'%s'는 %d번째 단어입니다.\n", word, wordCount);
+        }
+    }
+
+    if (wordCount == 0) {
+        printf("'%s'를 찾을 수 없습니다.\n", word);
+    }
+    else {
+        printf("'%s'는 총 %d번 발견되었습니다.\n", word, wordCount);
+    }
+
+    fclose(file);
+    return 0;
+}

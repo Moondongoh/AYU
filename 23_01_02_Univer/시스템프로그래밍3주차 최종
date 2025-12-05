@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX 5000
+
+int main() {
+    FILE* file;
+    char filename[] = "d.txt";
+    char ch;
+    char word[MAX]; 
+    int char_count = 0;
+    int word_count = 0;
+    int number_count = 0;
+    int in_word = 0;
+    int a_count = 0;
+    int count_line = 0;
+
+    file = fopen(filename, "r");
+
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return 1;
+    }
+
+    while ((ch = fgetc(file)) != EOF) {
+        char_count++;
+        if (ch == '\n') {
+            count_line++;
+        }
+        if (isalnum(ch)) {
+            if (!in_word) {
+                word_count++;
+                in_word = 1;
+                memset(word, 0, sizeof(word));
+            }
+            word[strlen(word)] = ch; 
+            if (isdigit(ch)) {
+                number_count++;
+            }
+            if (ch == 'a' || ch == 'A') {
+                a_count++;
+            }
+        } else {
+            if (in_word) {
+                // 'a' 또는 'A'가 포함된 단어인지 확인
+                if (strchr(word, 'a') || strchr(word, 'A')) {
+                    printf("'%s' 단어에 'a' 또는 'A'가 포함되어 있습니다.\n", word);
+                }
+            }
+            in_word = 0;
+        }
+    }
+
+    fclose(file);
+
+    printf("문자 수: %d\n", char_count);
+    printf("단어 수: %d\n", word_count);
+    printf("숫자 수: %d\n", number_count);
+    printf("a/A가 포함 된 단어의 수: %d\n", a_count);
+    printf("라인 수: %d\n", count_line);
+
+    return 0;
+}

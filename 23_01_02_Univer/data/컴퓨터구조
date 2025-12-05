@@ -1,0 +1,38 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+void bubbleSort(int data[], int n) {
+    int i, j;
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (data[j] > data[j + 1]) {
+                int temp = data[j];
+                data[j] = data[j + 1];
+                data[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int data[10];
+    int i;
+
+    printf("숫자를 10개 입력하세요.\n");
+    for (i = 0; i < 10; i++) {
+        scanf_s("%d", &data[i]);
+    }
+
+    printf("\n입력된 10개의 수 입니다.");
+    for (i = 0; i < 10; i++) {
+        printf("%d ", data[i]);
+    }
+
+    bubbleSort(data, 10);
+    printf("정렬된 데이터:\n");
+    for (int i = 0; i < 10; i++) {
+        printf("%d\n", data[i]);
+    }
+
+return 0;
+}

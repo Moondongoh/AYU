@@ -1,0 +1,68 @@
+#튜플 불변 시퀀스 타입(수정 불가능), 데이터를 ()로 감싸서 생성<< 생략 가능
+myBook = 2019, 'Python for data Analysis', '웨스 맥키니', 664
+myBook?
+#>>결과 Type:        tuple
+#String form: (2019, 'Python for data Analysis', '웨스 맥키니', 664)
+#Length:      4
+#Docstring:  Built-in immutable(불변) sequence.
+
+#이미 생성한 튜플을 담은 myBook 변수의 값을 변경하는 코드
+print(myBook)
+myBook = (2023, '생생 데이터 분석', '조인석', '435')
+print(myBook)
+
+#클래스와 객체 >> 붕어빵틀, 붕어빵
+
+#리스트 만들기
+numbers = [4,1,3,2]
+numbers?
+
+#>>결과 Type:        list
+#String form: [4, 1, 3, 2]
+#Length:      4
+#Docstring:  Built-in mutable(가변) sequence.
+#numbers[0] >> 4, numbers[2] >> 3, numbers[4] >> ERROR 
+#append: 맨 끝에 원하는 값을 추가, remove: 원하는 값 제거 insert: 위치에 값을 추가, pop: 추출 후 제거
+#len: 항목의 전체 개수 알 수 있음 
+
+#슬라이싱  >>> 해당 범위에 해당하는 리스트 객체를 새로 생성해서 반환하기 때문에 기존 리스트 값에 변화는 없음
+number[1:3]
+number[0:3]
+
+#[:] 얕은 복사
+
+new_numbers = number
+new_numbers.append(7)
+new_numbers
+
+#기존 numbers에 있는 값으로 알맞는 것은 [4, 9, 2, 8, 7]이다
+
+# *튜플과 리스트 > 데이터가 많으면 튜플 형식으로 이용하는 것이 좋음 왜냐 단순하고 간결한 기능만 제공함으로 성능 측면에서 이점을 줌
+
+#리스트를 튜플로, 튜플을 리스트로
+#tup_a = tuple(a)
+#tup_a  >(1, 2, 3, 4)
+
+#lis_a = list(tup_a)
+#lis_a  >[1, 2, 3, 4]
+
+#레인지와 순회 >> for문 제작시
+for n in range(10):
+    print(n)
+    
+#3에서 10    
+for n in range(3, 10):
+    print(n)
+    
+#딕셔너리
+family = {'동오':0, '준호':1, '상우':2, '규태':3, '동환':4}
+family?
+
+#결과>>Type:        dict
+#String form: {'동오': 0, '준호': 1, '상우': 2, '규태': 3, '동환': 4}
+#Length:      5
+#Docstring:  
+
+A = set('abracadabra')
+B = set('alacazam')
+A | B # A, B, A - B (차집합), A | B (합집합), A & B (교집합), A ^ B (대칭차집합)

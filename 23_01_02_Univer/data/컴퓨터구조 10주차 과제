@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define CACHE_SIZE 1024
+#define BLOCK_SIZE 32
+
+typedef struct {
+    int valid;
+    int tag;
+    int data[BLOCK_SIZE];
+} CacheBlock;
+
+int main() {
+    FILE* dataFile = fopen("gcc.trace", "r");
+    if (dataFile == NULL) {
+        printf("파일을 열 수 없습니다.\n");
+        return 1;
+    }
+
+    int totalLoads = 0;
+    int totalStores = 0;
+    int loadHits = 0;
+    int loadMisses = 0;
+    int storeHits = 0;
+    int storeMisses = 0;
+
+    int cacheBlocks = CACHE_SIZE / BLOCK_SIZE;
+    CacheBlock* cache = (CacheBlock*)malloc(cacheBlocks * sizeof(CacheBlock));
+
+    if (cache == NULL) {
+        printf("캐시를 위한 메모리 할당에 실패했습니다.\n");
+        return 1;
+    }
+
+    for (int i = 0; i < cacheBlocks; i++) {
+        cache[i].valid = 0;
+    }
+
+    int address, operation;
+    while (fscanf(dataFile, "%x %d", &address, &operation) == 2) {
+        int blockIndex = address / BLOCK_SIZE;
+        int tag = address / (CACHE_SIZE / cacheBlocks);
+
+        if (operation == 0) {
+            totalLoads++;
+            if (cache[blockIndex].valid && cache[blockIndex].tag == tag) {
+                loadHits++;
+            }
+            else {
+                loadMisses++;
+                cache[blockIndex].valid = 1;
+                cache[blockIndex].tag = tag;
+            }
+        }
+        else if (operation == 1) {
+            totalStores++;
+            if (cache[blockIndex].valid && cache[blockIndex].tag == tag) {
+                storeHits++;
+            }
+            else {
+                storeMisses++;
+                cache[blockIndex].valid = 1;
+                cache[blockIndex].tag = tag;
+            }
+        }
+    }
+
+    fclose(dataFile);
+    free(cache);
+
+    int totalMisses = loadMisses + storeMisses;
+    int totalCycles = totalLoads + totalStores + (totalMisses * 100);
+
+    printf("총 로드 수: %d\n", totalLoads);
+    printf("총 스토어 수: %d\n", totalStores);
+    printf("로드 히트 수: %d\n", loadHits);
+    printf("로드 미스 수: %d\n", loadMisses);
+    printf("스토어 히트 수: %d\n", storeHits);
+    printf("스토어 미스 수: %d\n", storeMisses);
+    printf("총 사이클 수: %d\n", totalCycles);
+
+    return 0;
+}

@@ -1,0 +1,58 @@
+import random
+
+# 행맨 게임 제작
+
+life = ['💔💔💔💔💔💔', '💔💔💔💔💔', '💔💔💔💔', '💔💔💔', '💔💔']
+
+damage = 0  # 문제를 틀릴 때마다 1 데미지씩 받습니다.
+
+# 단어와 힌트를 딕셔너리로 구성
+word_dict = {
+    "seoul": "대한민국의 수도",
+    "busan": "대한민국의 두 번째로 큰 도시",
+    "incheon": "대한민국의 항구 도시",
+    "suwon": "화성과 가까운 도시",
+    "jeju": "비행기를 타고 가는 섬",
+    "ulsan": "대한민국의 동해안 도시",
+    "daegu": "대한민국의 동북 지역 도시",
+    "gwangju": "전라도의 중심 도시",
+    "mokpo": "대한민국의 서해안 도시"
+}
+choiceWord = random.choice(list(word_dict.keys()))  # wordList에서 랜덤으로 단어 선택
+
+display = "힌트:"+ word_dict[choiceWord]   # 단어 힌트 제공
+
+wordLen = len(choiceWord)  # 선정된 단어의 길이
+
+# 표시를 관리하기 위한 목록 생성
+display_list = ["_" for _ in range(wordLen)]
+
+print("".join(display_list))  # 표시를 문자열로 변환하여 출력
+print(display)
+
+endGame = False  # 게임 종료 여부를 나타내는 변수
+
+while not endGame:
+    playerInput = input("단어의 글자를 입력하세요(1글자): ").lower()  # 소문자 입력
+
+    for wordPos in range(wordLen):
+        word = choiceWord[wordPos]
+        if word == playerInput:
+            display_list[wordPos] = word
+
+    if playerInput not in choiceWord:
+        damage += 1  # 문제를 틀릴 때마다 damage를 1 증가시킵니다.
+
+    if damage >= 6:  # 6번 틀리면 게임 종료
+        endGame = True
+        print("목숨이 없습니다!! 실패!!")
+        break
+
+    if "_" not in display_list:
+        endGame = True
+        print("단어를 맞추셨습니다!! 성공!!")
+        break
+
+    print("".join(display_list))
+    if damage < len(life):
+        print(life[damage]) 

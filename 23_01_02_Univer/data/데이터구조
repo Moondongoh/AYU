@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;                
+    struct Node* link;      
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->link = NULL;
+    return newNode;
+}
+
+struct Node* deleteNode(struct Node* head, int data) {
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+
+    while (temp != NULL && temp->data != data) {
+        prev = temp;
+        temp = temp->link;
+    }
+
+    if (temp == NULL) {
+        printf("삭제할 노드가 없습니다.\n");
+        return head;
+    }
+
+    if (prev == NULL) {
+        head = head->link;
+    }
+    else {
+        prev->link = temp->link;
+    }
+
+    free(temp); 
+
+    printf("노드 데이터 %d를 삭제하였습니다.\n", data);
+    return head;
+}
+
+int main() {
+    struct Node* list1 = createNode(10);
+    list1->link = createNode(20);
+    list1->link->link = createNode(30);
+    list1->link->link->link = createNode(70);
+    list1->link->link->link->link = createNode(80);
+
+    struct Node* list2 = createNode(40);
+    list2->link = createNode(50);
+    list2->link->link = createNode(60);
+    list2->link->link->link = createNode(70);
+    list2->link->link->link->link = createNode(90);
+
+    printf("list1: ");
+    struct Node* temp1 = list1;
+    while (temp1 != NULL) {
+        printf("%d ", temp1->data);
+        temp1 = temp1->link;
+    }
+    printf("\n");
+
+    printf("list2: ");
+    struct Node* temp2 = list2;
+    while (temp2 != NULL) {
+        printf("%d ", temp2->data);
+        temp2 = temp2->link;
+    }
+    printf("\n");
+
+    int dataToDelete;
+    printf("삭제할 데이터를 입력하세요: ");
+    scanf_s("%d", &dataToDelete);
+    list1 = deleteNode(list1, dataToDelete);
+    list2 = deleteNode(list2, dataToDelete);
+
+    printf("list1 (삭제 후): ");
+    temp1 = list1;
+    while (temp1 != NULL) {
+        printf("%d ", temp1->data);
+        temp1 = temp1->link;
+    }
+    printf("list2 (삭제 후): ");
+    temp2 = list2;
+    while (temp2 != NULL) {
+        printf("%d ", temp2->data);
+        temp2 = temp2->link;
+    }
+    printf("\n");
+
+
+    return 0;
+}

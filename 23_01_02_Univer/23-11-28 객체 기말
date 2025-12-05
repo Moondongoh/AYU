@@ -1,0 +1,332 @@
+#include<iostream>
+#include<string>
+#include <cctype>
+#include <algorithm>
+using namespace std;
+
+class PlayFair 
+{
+   char mTable[25];                                  // 배열생성
+   string mPair;                                     // 암호화할 대상이 되는 문자열 예시 assassinator 
+   string mKey;                                      // 암호의 키로 사용되는 문자열
+   string Passward = "";                             //
+   char Pair1;                                       // 단어를 저장하는 변수1
+   char Pair2;                                       // 단어를 저장하는 변수2
+public:
+   PlayFair(string mKey, string mPair);              // PlayFair 클래스의 생성자 mkey 와 mPair라는 매개변수를 받음.
+   void makeTable();                                 // 5x5 행렬을 생성하는 함수
+   void showTable();                                 // 5x5 행렬 출력 함수.
+   string makeEncryption(string mEncryption);        // mEncryption라는 문자열을 받아 PlayFair 암호를 사용하여 암호화하는 함수
+};
+PlayFair::PlayFair(string mKey, string mPair) 
+{       // PlayFair 클래스의 생성자를 정의한다.
+   this->mPair = mPair;                              // 생성자의 매개변수 mPair를 클래스의 멤버 변수 mPair에 할당
+   this->mKey = mKey;                                // 생성자의 매개변수 mKey를 클래스의 멤버 변수 mKey에 할당
+}
+void PlayFair::makeTable() {                          // mKey와 mPair를 이용하여 table을 만들기. (5 X 5)
+   cout << mKey << endl;
+   for (int i = 0; i < mKey.length(); i++) {         // 키값 소문자로 변환
+      mKey[i] = tolower(mKey[i]);
+   }
+   cout << mKey << endl;
+   mKey += "abcdefghijklmnopqrstuvwxyz";             // 키값 뒤에 알파벳 전부 붙이기
+   cout << mKey << endl;
+   for (int i = 0; i < mPair.length(); i++) {        // 페어값 소문자로 변환
+      mPair[i] = tolower(mPair[i]);
+   }
+   cout << mPair << endl;
+   Pair1 = mPair[0];                                 // mPair에서 가져온 문자를 각각 저장 (한칸에 겹쳐서 들어가는 단어들)
+   Pair2 = mPair[2];                                 // 2에 저장
+   for (int a = 0; a < mKey.length(); a++)           // 키값의 한자리 한자리 다 읽으면서 페어값이
+   {                                                 // 있으면 앞자리를 뒷자리로 덮어쓰기
+      if (mKey[a] == Pair1)                         // 두 문자는 한자리에있는걸로 취급
+      {                                             // mKey의 글자 중에 미리 정해두 Pair값 과 겹치는 단어가 있다면 그 단어를 !/? ?라고 하는 과정
+         mKey[a] = Pair2;
+      }
+   }
+   cout << Pair1 << "를" << Pair2 << "로 바꾸기" << mKey << endl;
+   int check_used;
+   int adress = 0;
+   for (int a = 0; a < mKey.length(); a++) {         // 이중포문을 이용하여 중복된 문자를 제외하고
+      check_used = 0;                               // 처음 쓰인 문자만 table에다 저장을한다.
+      for (int i = 0; i != 25; i++) {               // mKey의 i번째 값과 table의 모든 데이터와
+         if (mKey[a] == mTable[i]) {               // 비교를 해보고 만약 mKey의 값이 table에 존재
+            check_used++;                         // 했다면 check_used의 값을 올려준다
+         }                                         // 만약 겹치는 부분이 있었으면 check_used의 값이
+      }                                             // 움직였을테니 0이 아니면 table에 추가하지않고
+      if (check_used == 0) {                        // 0이면
+         mTable[adress] = mKey[a];                 // 추가
+         adress++;
+      }
+   }
+   mTable[adress] = NULL;                                  // table의 끝을 나타내기 위해 NULL값 추가
+   cout << "중복문자 지운 후 : " << mTable << endl << endl;// 중복된 문자가 삭제된 table 출력
+}
+void PlayFair::showTable() {                                // table에 있는 값들을 5 X 5 로 화면에 출력해줌
+   int count = 0;                                          // table의 값을 5개씩 잘라서 5번 출력하는데 키값을 발견하면 count변수는 table에서 현재 출력 중인 값의 위치
+   cout << "table" << endl << endl;                        // 묶인 값 두개 다 출력해준다
+   for (int i = 0; i < 5; i++) {                           // 5개씩 5번 출력
+      for (int i = 0; i < 5; i++, count++) {              // 5개의 글자
+         if (mTable[count] == Pair2) {
+            cout << Pair1 << "/" << Pair2 << " ";
+         }
+         else {
+            cout << mTable[count] << "  ";
+         }
+      }
+      cout << endl;
+   }
+}
+string PlayFair::makeEncryption(string mEncryption) {
+
+   //람다 함수란 일반 함수에서 함수 이름이 없어지고 동작만 있는 함수를 람다 함수라함.
+
+   // isalpha라는 함수를 이용해 알파벳이 아닌 특수문자는 삭제해버림. ~!@#$ 등등등...
+   /*remove_if mEncryption.begin .... });여기는 mEncryption의 시작부터 끝까지가서 
+   [](cahr c)... 의 람다 함수의 조건을 만족하는 문자를 찾아 이동함.
+   람다 함수는 주어진 문자 c가 알파벳이 아니면 true else false를 반환.
+   그냥 처음부터 끝까지 돌고 isaplha를 통해 알파벳이 아니다? 그러면 erase로 지움
+   근데 숫자도 지워버림...
+   */
+   //mEncryption.erase(remove_if(mEncryption.begin(), mEncryption.end(), [](char c) {
+   //   return !isalpha(c);
+   //   }), mEncryption.end());
+   //cout << "특수문자 제거 완료 :" << mEncryption << endl;
+
+   int EvenOdd, isthatodd;
+   for (int i = 0; i < mEncryption.length(); i++) {            // 암호화할 문장 소문자로 변환
+      mEncryption[i] = tolower(mEncryption[i]);
+   }
+   cout << "소문자로 전환 :" << mEncryption << endl;
+
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), ' '), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '`'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '~'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '!'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '@'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '#'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '$'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '%'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '^'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '&'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '*'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '('), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), ')'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '-'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '_'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '='), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '+'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '{'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '}'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '['), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), ']'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '|'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), ';'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), ':'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '"'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '/'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '<'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '>'), mEncryption.end());
+   mEncryption.erase(std::remove(mEncryption.begin(), mEncryption.end(), '?'), mEncryption.end());
+   cout << "특수 문자 제거 :" << mEncryption << endl;
+
+
+
+   //for (int a = 0; a <= mEncryption.length(); a++)
+   //{
+   //   if (mEncryption[a] == ' ')
+   //   {
+   //      mEncryption.erase(a, 1);                        // 암호화할 문장 공백제거 위에서 특수문자 제거 완료.
+   //   }
+   //}
+   for (int j = 0; j < mEncryption.length(); j += 2)       // 두자리씩 끊어서 같은지 확인하는데
+   {
+      if (mEncryption[j] == mEncryption[j + 1])           // 두 단어가 같아?
+         mEncryption = mEncryption.insert(j + 1, "x");   // 두 단어 사이 x추가
+   }
+   EvenOdd = mEncryption.length();                         // 글자의 수가 만약 홀수이면 맨뒷자리에 x 추가
+   cout << "글자수 : " << EvenOdd << endl;
+   isthatodd = EvenOdd % 2;                                // 글자수 EvenOdd를 2로 나눠서 나머지가 1이면 홀수 그 외에는 짝수
+   if (isthatodd == 1) {
+      cout << "홀수입니다." << endl;                      // 단어 수가 홀수라면 짝수로 맞추기 위해 마지막 자리에 X 붙이기
+      cout << mEncryption << endl;
+      mEncryption += "x";
+      cout << mEncryption << endl;
+   }
+   else {
+      cout << "짝수입니다." << endl;
+   }
+   cout << "x치환 후 : ";
+   for (int j = 0; j < mEncryption.length(); j++) {
+      cout << mEncryption[j];
+      if (j % 2 != 0)                              // 인덱스가 홀수 일 경우
+         cout << "  ";                            // 공백을 집어 넣어 두 단어씩 구분 하도록 해줌
+   }
+   cout << endl;
+   string First_Word;                               // 현재 처리중인 두 단어 중 첫 단어
+   string Last_Word;                                // 현재 처리중인 두 단어 중 두번째 단어
+   int Faddres, Laddres;
+   int z, q;
+   for (int s = 0; s < mEncryption.length(); s = s + 2)
+   {
+      First_Word = mEncryption[s];                  // 두글자씩 끊어서 보는데 앞자리 뒷자리
+      Last_Word = mEncryption[s + 1];               // 위치를 만드는 공간
+
+      if (mEncryption[s] == Pair1) 
+      {                                             // 만약 두글자를 보는데 페어값이 있으면
+         mEncryption[s] = Pair2;                   // 해당 글자를 table에 남아있는 값으로 바꿔주기 
+      }                                             // 한 문자를 같이 있는취급을 하지만 table에는 하나의 값만있기때문
+      if (mEncryption[s + 1] == Pair1) 
+      {
+         mEncryption[s + 1] = Pair2;
+      }
+      for (z = 0; z < 25; z++)                      // table에서 해당 글자 순서 찾는 for문
+      {
+         int c = mTable[z];
+         if (mTable[z] == mEncryption[s])
+         {
+            Faddres = z;
+         }
+      }
+      for (q = 0; q < 25; q++)                      // table에서 해당 글자 순서 찾는 for문
+      {
+         if (mTable[q] == mEncryption[s + 1])
+         {
+            Laddres = q;
+         }
+      }
+      /*
+      * 우리는 5x5의 배열을 생성했음.
+      * 그래서 1부터 25까지의 수를 사용 가능함
+      * 1번 라인은 (0~4) 2번 라인은 (5~9) 3번 라인은 (10~14) 4번 라인은 (15~19) 5번 라인은(20~24)
+      * 이를 토대로 라인을 배정
+      */
+      int F_Line, L_Line;
+      if (Faddres >= 0 && Faddres <= 4)
+      {
+         F_Line = 1;
+      }
+      else if (Faddres >= 5 && Faddres <= 9)
+      {
+         F_Line = 2;
+      }
+      else if (Faddres >= 10 && Faddres <= 14)
+      {
+         F_Line = 3;
+      }
+      else if (Faddres >= 15 && Faddres <= 19)
+      {
+         F_Line = 4;
+      }
+      else if (Faddres >= 20 && Faddres <= 24)
+      {
+         F_Line = 5;
+      }
+      //여기도 Faddres와 같은 방식으로 라인을 나눠줌
+      if (Laddres >= 0 && Laddres <= 4)
+      {
+         L_Line = 1;
+      }
+      else if (Laddres >= 5 && Laddres <= 9)
+      {
+         L_Line = 2;
+      }
+      else if (Laddres >= 10 && Laddres <= 14)
+      {
+         L_Line = 3;
+      }
+      else if (Laddres >= 15 && Laddres <= 19)
+      {
+         L_Line = 4;
+      }
+      else if (Laddres >= 20 && Laddres <= 24)
+      {
+         L_Line = 5;
+      }
+      /* <같은 행인 경우>
+      * 5줄로 나뉘어져 있기 때문에 0~4 이후에 5~9로 넘어 가도록 해야함
+      * 만약 3번4번 단어라면 3번은 4번 단어가 되고 4번은 5번 단어가 되어야함
+      * 글자 순서 + 1 나누기 5를 해서 나온 나머지 값이 글자의 위치를 설명
+      * 여기서 나머지가 0이라면 가장 끝 값이 된다 4,9,14,19,24는
+      * 해당 라인의 가장 앞의 단어로 가도록한다.
+      * 이 역시 Faddres, Laddres 동일하게 시행
+      */
+      int True, True1;
+      True = (Faddres + 1) % 5;                     //True와 True1은 문자순서가 맨 마지막에 남아있는지 확인하는
+      True1 = (Laddres + 1) % 5;                    //변수. 예를들어 4번째, 9번째, 14번째, 19번째, 24번째에 있다면
+      if (L_Line == F_Line)                         //암호화될 문자는 0,5,10,15,20번째 문자가 들어가야한다.
+      {                                             //만약 두 라인이 같다면 같은 열에 있으므로 오른쪽으로 한칸 가거나
+         if (True == 0)                            //맨 왼쪽값이 되어야한다. 여기서 True와 True1이 사용되는데
+         {                                         //(글자 순서 + 1)%5를 하여 글자의 위치가 어딧는지 확인한다. 
+            Passward += mTable[Faddres - 4];      //만약 True와 True1의 값이 0이면 맨 오른쪽에 위치하기 때문에
+         }                                         //맨 왼쪽값이 암호화할 문자이다. 만약 0이 아니면 맨 오른쪽이
+         else if (True != 0)                       //아니기때문에 오른쪽으로 한칸씩 움직이면 된다.
+         {                                         //그 후 해당 문자를 passward에 추가해준다.
+            Passward += mTable[Faddres + 1];
+         }
+         if (True1 == 0)
+         {
+            Passward += mTable[Laddres - 4];
+         }
+         else if (True1 != 0)
+         {
+            Passward += mTable[Laddres + 1];
+         }
+      }
+      /* <같은 열일 경우>
+      * 이번에는 Faddres와 Laddres가 같은 열에 있는지 확인
+      * 같은 열에 있다면 밑으로 내려가 가도록 설정
+      * 문자의 순서를 5로 나누면 각각 0,1,2,3,4값이 나온다
+      * 이를 토대로 같은 열인지 확인
+      * 여기서 숫자가 20,21,22,23,24 즉 맨 하단 숫자면 위로 올라가야하기에 -20을
+      * 숫자가 0~19라면 하단 숫자가 남아 있기에 +5를 해서 값을 찾는다.
+      */
+      else if (Faddres % 5 == Laddres % 5) {        //같은 라인에 없었다면 같은 열에 있는지 확인한다.
+         if (Faddres >= 20 && Faddres <= 24) {     //문자의 순서%5를 해서 값이 같으면 같은열에 있는걸로 인지한다.
+            Passward += mTable[Faddres - 20];     //그리고 문자의 순서가 20 이상이면 맨 마지막줄 이기 때문에
+         }                                         //맨 윗줄로 올라가기 위해 -20을 해준다.
+         else {                                    //만약 20이상이 아니라면 +5를 하여 바로 밑 값으로 들어간다.
+            Passward += mTable[Faddres + 5];      //그 후 해당 문자를 passward에 추가해준다.
+         }
+         if (Laddres >= 20 && Laddres <= 24) {
+            Passward += mTable[Laddres - 20];
+         }
+         else {
+            Passward += mTable[Laddres + 5];
+         }
+      }
+      /*
+      * 라인이 다른 단어를 암호화할 경우임.
+      * 우리는 5x5 행렬을 구현했기에 단어 사이의 차이는 5배씩 남.
+      * 그래서 우선 첫 단어가 몇 번째 라인인지 찾아 그리고 두 번째 라인도 몇 번째 라인인지 찾아
+      * 찾았는데 첫 단어가 혹은 두 번째 단어가 큰지 봄
+      * 만약 첫 단어가 크다? 그러면 큰수에서 작은 수를 빼서 몇 라인이 차이 나는지 확인
+      * 그리고 라인수에 5를 곱하면 우리가 원하는 직사각형을 만들어서 왼쪽 오른쪽 단어를 확인 할 수 있음.
+      */
+      else {                                        //같은 라인도 같은 열도 아니면 두 문자의 행과 열이 만나는곳을
+         int gap;                                  //찾아야하는데 이때 다시 라인값을 사용하여 위치가 얼마나 차이가
+         if (F_Line > L_Line) {                    //나는지 찾는다. 그 후 차이나는 값 * 5를 더하거나 빼서 암호화 될
+            gap = F_Line - L_Line;                //문자를 찾는다. 그 후 해당 문자를 passward에 추가해준다.
+            Passward += mTable[Laddres + 5 * gap];
+            Passward += mTable[Faddres - 5 * gap];
+         }
+         else {
+            gap = L_Line - F_Line;
+            Passward += mTable[Laddres - 5 * gap];
+            Passward += mTable[Faddres + 5 * gap];
+         }
+      }
+
+   }
+   cout << "암호화한 문장 : " << Passward << endl;
+   return mEncryption;
+}
+int main() {
+   string str;
+   PlayFair pfair("assasinator", "i/j");     //mpair에 i/j mKey에 assasinator이 들어감
+   pfair.makeTable();
+   pfair.showTable();
+   cout << "암호화할 문장 : ";
+   getline(cin, str);
+   pfair.makeEncryption(str);
+}

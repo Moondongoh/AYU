@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+/*
+노드 구조체 정의
+각 노드는 data와 다음 노드를 가리키는 포인터(next)로 이루어져 있다.
+□(data)□(next) 
+맨 앞 데이터를 가리키고 
+next는 다음 노드를 가르킴.
+현재는 struct D_Node 와 A_Node 는 같은 뜻임.
+*/
+typedef struct D_Node
+{
+    int data;
+    struct D_Node* next;
+}A_Node;
+
+// 함수 원형 선언
+void addNode(A_Node** head, int data);
+void deleteNode(A_Node** head);
+void printList(A_Node* head);
+
+int main() 
+{
+    A_Node* head = NULL;  // 연결 리스트의 헤드 포인터 초기화
+
+    int select;
+    int data;
+
+    do 
+    {
+        // 메뉴 출력
+        printf("1. 데이터 추가\n");
+        printf("2. 데이터 삭제\n");
+        printf("3. 종료\n");
+        printf("선택: ");
+        scanf_s("%d", &select);
+
+        switch (select) 
+        {
+        case 1:
+            // 데이터 추가
+            printf("추가할 데이터를 입력하세요(단 숫자만 입력 가능함) : ㅊ ");
+            scanf_s("%d", &data);
+            addNode(&head, data);
+            break;
+
+        case 2:
+            // 데이터 삭제
+            deleteNode(&head);
+            break;
+
+        case 3:
+            // 종료
+            break;
+
+        default:
+            printf("잘못된 선택입니다. 다시 선택하세요.\n");
+        }
+
+        // 현재 연결 리스트 출력
+        printf("현재 연결 리스트: ");
+        printList(head);
+
+    } while (select != 3);
+
+    
+
+    // 메모리 해제
+    // head값이 NULL이 아닐때 동안 계속 while문 실행
+    // cur을 head로 초기화해 현재 노드를 가르키도록
+    // head를 다음 노드로 이동 후
+    // 현재 노드를 메모리 해제함.
+    while (head != NULL)
+    {
+        struct D_Node* cur = head;
+        head = head->next;
+        free(cur);
+    }
+
+    return 0;
+}
+
+// 노드 추가 함수
+void addNode(A_Node** head, int data)
+{
+    struct D_Node* newNode = (struct D_Node*)malloc(sizeof(struct D_Node));
+    newNode->data = data;
+    newNode->next = NULL;  // 새로운 노드의 next를 NULL로 설정
+    /*
+    * cur은 현재 연결 리스트를 끝까지 이동하기 위한 포인터임
+    * cur이 마지막 노드를 가리킨 후에 cur->next에 새로운 노드를 
+    연결하여
+    * 새로운 노드를 연결리스트의 끝에 추가.
+    */
+    if (*head == NULL) 
+    {
+        // 연결 리스트가 비어있는 경우
+        *head = newNode;
+    }
+    else {
+        // 연결 리스트의 끝까지 이동
+        struct D_Node* cur = *head;
+        while (cur->next != NULL)
+        {
+            cur = cur->next; //다음 노드로 ㄱ NULL값이다 = 끝이다
+        }
+
+        // 새로운 노드를 연결 리스트의 끝에 추가
+        cur->next = newNode;
+    }
+}
+
+// 마지막 노드 삭제 함수
+void deleteNode(A_Node** head)
+{
+    if (*head == NULL) 
+    {
+        printf("삭제할 노드가 없습니다.\n");
+        return;
+    }
+
+    if ((*head)->next == NULL) 
+    {
+        free(*head);
+        *head = NULL;
+    }
+    else 
+    {
+        struct D_Node* cur = *head;
+        while (cur ->next->next != NULL)
+        {
+            cur = cur->next;
+        }
+        free(cur->next);
+        cur->next = NULL;
+    }
+}
+
+// 연결 리스트 출력 함수
+void printList(A_Node* head)
+{
+    // cur을 head로
+    struct D_Node* cur = head;
+    /*
+    현재 노드가 NULL이 아닐때까지 why? 
+    연결리스트의 끝은 NULL이기에 NULL이다? 종료 ㄱ
+    */
+    while (cur != NULL) 
+    {
+        printf("%d ", cur->data);
+        cur = cur->next;
+    }
+    printf("\n");
+}

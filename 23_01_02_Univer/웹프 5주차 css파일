@@ -1,0 +1,36 @@
+   .box {
+        text-align: center;
+        border: 2px solid brown;
+        padding: 20px; /* 내용과 테두리 사이의 간격 설정 */
+        width: 400px; /* 테두리의 가로 너비 설정 */
+    }
+
+    /* 목록 스타일 설정 */
+    .box ol {
+        list-style: none; /* 목록 마커 제거 */
+        padding: 0; /* 목록 내부 패딩 제거 */
+        text-align: left; /* 목록 텍스트 왼쪽 정렬 */
+    }
+
+    /* 각 목록 항목 스타일 설정 */
+    .box ol li {
+        border: 5px dotted gray; /* 회색 점선 테두리 설정 */
+        padding: 10px; /* 내용과 테두리 사이의 간격 설정 */
+        display: flex; /* 요소를 수평으로 배치하기 위해 flexbox 사용 */
+        align-items: center; /* 수직 중앙 정렬 */
+    }
+
+    .box ol li span {
+        border: 5px dotted gray; /* 회색 점선 테두리 설정 */
+        font-size: 35px; /* 숫자 폰트 크기 설정 */
+        font-weight: bold; /* 숫자 폰트 굵기 설정 */
+        padding-right: 10px; /* 숫자와 본문 사이의 간격 설정 */
+        color: green; /* 글꼴 색상을 초록색으로 설정합니다. */
+
+    }
+
+    .box ol li p {
+        border: 5px dotted gray; /* 회색 점선 테두리 설정 */
+        padding: 10px; /* 내용과 테두리 사이의 간격 설정 */
+        flex: 1; /* 본문이 남은 가용 공간을 차지하도록 설정 */
+    }

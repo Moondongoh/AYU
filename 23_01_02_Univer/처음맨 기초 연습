@@ -1,0 +1,15 @@
+#include<stdio.h>
+
+main() {
+	int i,n,m, cnt;
+	cnt = 0;
+	puts("첫 번째 숫자: ");
+	scanf_s("%d", &n);
+	puts("마지막 번째 숫자: ");
+	scanf_s("%d", &m);
+	for (i = n; i <= m; i++){
+		if (i % 2 == 0)
+			cnt += 1;
+	}
+	printf("%d에서 %d까지 2의 배수의 개수 :%d\n",n,m,cnt);
+}

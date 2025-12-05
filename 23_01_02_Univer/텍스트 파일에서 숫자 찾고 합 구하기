@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+int is_digit_word(char* word) {
+    // 이 함수는 숫자로 이루어진 단어를 판별합니다.
+    for (int i = 0; word[i] != '\0'; i++) {
+        if (!isdigit(word[i])) {
+            return 0; // 숫자가 아닌 문자가 있을 경우
+        }
+    }
+    return 1; // 모든 문자가 숫자인 경우
+}
+
+int main() {
+    char filename[] = "a.txt";
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("파일 열기 실패");
+        return 1;
+    }
+
+    int numberCount = 0; // 숫자로 이루어진 단어의 갯수
+    int numberSum = 0;   // 숫자로 이루어진 단어의 합
+    char line[100];      // 한 줄을 저장할 버퍼
+
+    while (fgets(line, sizeof(line), file) != NULL) {
+        // 한 줄을 숫자로 이루어진 단어로 분할하고 합계 계산
+        char* token = strtok(line, ",\n");
+        while (token != NULL) {
+            if (is_digit_word(token)) {
+                int number = atoi(token);
+                numberCount++;
+                numberSum += number;
+            }
+            token = strtok(NULL, ",\n");
+        }
+    }
+
+    if (numberCount == 0) {
+        printf("숫자로 이루어진 단어를 찾을 수 없습니다.\n");
+    }
+    else {
+        printf("숫자로 이루어진 단어의 갯수는 %d개이며, 합계는 %d 입니다.\n", numberCount, numberSum);
+    }
+
+    fclose(file);
+    return 0;
+}

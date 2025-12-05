@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <string.h>
+
+void saveMacroContent(FILE* sourceFile, FILE* targetFile) {
+    char line[256];
+    while (fgets(line, sizeof(line), sourceFile)) {
+        if (strncmp(line, "KM\tENDM", 7) == 0 || strncmp(line, "CM\tENDM", 7) == 0) {
+            // 매크로 종료 부분이면 종료
+            break;
+        }
+        fputs(line, targetFile); // 매크로 내용을 targetFile에 저장
+    }
+}
+
+int main() {
+    FILE* aFile = fopen("a.txt", "r");
+    FILE* kmFile = fopen("KM.txt", "w");
+    FILE* cmFile = fopen("CM.txt", "w");
+    FILE* bFile = fopen("b.txt", "w");
+
+    if (aFile == NULL || kmFile == NULL || cmFile == NULL || bFile == NULL) {
+        printf("파일을 열 수 없습니다.");
+        return 1;
+    }
+
+    char line[256];
+
+    while (fgets(line, sizeof(line), aFile)) {
+        if (strncmp(line, "KM\tMACRO", 7) == 0) {
+            // KM 매크로 호출
+            saveMacroContent(aFile, kmFile);
+        }
+        else if (strncmp(line, "CM\tMACRO", 7) == 0) {
+            // CM 매크로 호출
+            saveMacroContent(aFile, cmFile);
+        }
+        else {
+            // 그 외 내용은 b.txt에 저장
+            fputs(line, bFile);
+        }
+    }
+
+    fclose(aFile);
+    fclose(kmFile);
+    fclose(cmFile);
+    fclose(bFile);
+
+    // "b.txt" 파일을 다시 열어 읽어서 KM와 CM 매크로 내용 출력 및 저장
+    bFile = fopen("b.txt", "r");
+    if (bFile == NULL) {
+        printf("파일을 열 수 없습니다.");
+        return 1;
+    }
+
+    FILE* outputToFile = fopen("output.txt", "w"); // 결과를 저장할 파일 열기
+
+    while (fgets(line, sizeof(line), bFile)) {
+        if (strstr(line, "KM") != NULL) {
+            fputs("I have\nADD AX, BX\nAPPLE ADAM\n", stdout); // KM를 대체한 내용 출력
+            fputs("I have\nADD AX, BX\nAPPLE ADAM\n", outputToFile); // 결과를 파일에 저장
+        }
+        else if (strstr(line, "CM") != NULL) {
+            fputs("a DREAM I have\nSUBOO AX, BX\nPEAR ADAM\n", stdout); // CM를 대체한 내용 출력
+            fputs("a DREAM I have\nSUBOO AX, BX\nPEAR ADAM\n", outputToFile); // 결과를 파일에 저장
+        }
+        else {
+            fputs(line, stdout);
+            fputs(line, outputToFile); // 결과를 파일에 저장
+        }
+    }
+
+    fclose(bFile);
+    fclose(outputToFile); // 결과 파일 닫기
+
+    return 0;
+}

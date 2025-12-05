@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    FILE* file;
+    char filename[] = "d.txt";
+    char searchWord[1000];
+    char line[200];
+    int lineNumber = 0;
+
+    file = fopen(filename, "r");
+
+    if (file == NULL) {
+        printf("파일을 열 수 없습니다.\n");
+        return 1;
+    }
+
+    printf("검색할 단어를 입력하세요: ");
+    scanf("%s", searchWord);
+
+    while (fgets(line, sizeof(line), file)) {
+        lineNumber++;
+
+        char* word = strtok(line, " \t\n");
+        int wordCount = 0;
+        while (word != NULL) {
+            wordCount++;
+            if (strcmp(word, searchWord) == 0) {
+                printf("{%d, %d}\n", lineNumber, wordCount);
+            }
+            word = strtok(NULL, " \t\n");
+        }
+    }
+
+    fclose(file);
+
+    return 0;
+}

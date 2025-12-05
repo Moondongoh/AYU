@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// getWordType 함수 이용해서 문자열을 입력으로 받아 해당 문자열의 종류 판별할거임
+char* getWordType(char* word) {
+    //여기서 주어진 문자열 word가 MOV, ADD, CMP와 일치하면 명령어로 cmd ㄱ
+    if (strcmp(word, "MOV") == 0 || strcmp(word, "ADD") == 0 || strcmp(word, "CMP") == 0 || strcmp(word, "JA") == 0) {
+        return "[OPCD]";
+    }
+    else if (strcmp(word, "ASSUME") == 0 ) {
+        return "[DIR]";
+    }
+    //여기서는 AX, BX, CX,DX면 R16ㄱ
+    else if (strcmp(word, "AX") == 0 || strcmp(word, "BX") == 0 || strcmp(word, "CX") == 0 || strcmp(word, "DX") == 0 || strcmp(word, "SI")== 0 || strcmp(word, "DI") == 0 || strcmp(word, "CS") == 0)   {
+        return "[reg]";
+    }
+    //여기서는 AH, AL, BH, BL, CH, CL, DH, DL이면 R8ㄱ
+    else if (strcmp(word, "AH") == 0 || strcmp(word, "AL") == 0 || strcmp(word, "BH") == 0 || strcmp(word, "BL") == 0 || strcmp(word, "CH") == 0 || strcmp(word, "CL") == 0 || strcmp(word, "DH") == 0 || strcmp(word, "DL") == 0) {
+        return "[reg]";
+    }
+
+    /*isdigit함수 사용 << 숫자 판별 그래서 나머지 다 돌리고
+    * 반복문을 사용해서 숫자인지 (숫자가 아니면 symb을 출력) 아닌지 확인
+    * 문자열의 첫 코드를 확인 -> 만약 숫자라면 for루프 통해 문자열 나머지 부분 확인
+    * 루프 중 숫자가 아닌걸 찾으면 symb출력 -> 루프 통과후 모든 문자가 숫자면 num
+    * 첫 글자가 숫자가 아니다? -> symb출력
+    */
+
+    else if (isdigit(word[0])) {
+        int i;
+        for (i = 1; i < strlen(word); i++) {
+            if (!isdigit(word[i])) {
+                return "[abc]";
+            }
+        }
+        return "[num]";
+    }
+    return "[abc]";
+}
+
+int main() {
+    FILE* file = fopen("assembly_code.txt", "r");
+    char line[256];
+    while (fgets(line, sizeof(line), file)) {
+        //현재 줄 출력 근데 줄 바꿈을 하고 싶은데 첫줄도 바꿔짐.
+        // 나머진 출력 관련.
+        printf("\n", line);
+        char* word = strtok(line, " ,:\t\n");
+        while (word != NULL) {
+            char* type = getWordType(word);
+            printf("%s\t", type);
+            word = strtok(NULL, " ,:\t\n");
+        }
+    }
+    fclose(file);
+    return 0;
+}

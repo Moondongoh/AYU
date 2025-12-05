@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void swap(int* a, int* b) {
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+int partition(int arr[], int low, int high) {
+	int pivot = arr[high];
+	int i = low - 1;
+	for (int j = low; j <= high - 1; j++) {
+		if (arr[j] <= pivot) {
+			i++;
+			swap(&arr[i], &arr[j]);
+		}
+	}
+
+	swap(&arr[i + 1], &arr[high]);
+	return i + 1;
+}
+
+void quicksort(int arr[], int low, int high) {
+	if (low < high) {
+		int pivot = partition(arr, low, high);
+		quicksort(arr, low, pivot - 1);
+		quicksort(arr, pivot + 1, high);
+	}
+}
+
+void generateRandomArray(int arr[], int size) {
+	for (int i = 0; i < size; i++) {
+		arr[i] = rand() % 1000;
+	}
+}
+
+void printArray(int arr[], int size) {
+	for (int i = 0; i < size; i++) {
+		printf("%d ", arr[i]);
+	}
+	printf("\n");
+}
+
+int main() {
+	srand(time(NULL));
+	int size1 = 1000;
+	int* arr1 = malloc(sizeof(int) * size1);
+	if (arr1 == NULL) {
+		printf("메모리 할당에 실패하였습니둥.\n");
+		return 1;
+	}
+	generateRandomArray(arr1, size1);
+
+	clock_t start = clock();
+	quicksort(arr1, 0, size1 - 1);
+	clock_t end = clock();
+
+	double time1 = (double)(end - start) / CLOCKS_PER_SEC;
+
+	printf("%d개에 대한 실행 시간: %f초\n", size1, time1);
+
+	free(arr1);
+
+	int size2 = 10000;
+	int* arr2 = malloc(sizeof(int) * size2);
+	if (arr2 == NULL) {
+		printf("메모리 할당에 실패하였습니둥.\n");
+		return 1;
+	}
+	generateRandomArray(arr2, size2);
+
+	start = clock();
+	quicksort(arr2, 0, size2 - 1);
+	end = clock();
+
+	double time2 = (double)(end - start) / CLOCKS_PER_SEC;
+
+	printf("%d개에 대한 실행 시간: %f초\n", size2, time2);
+
+	free(arr2);
+
+	int size3 = 100000;
+	int* arr3 = malloc(sizeof(int) * size3);
+	if (arr3 == NULL) {
+		printf("메모리 할당에 실패하였습니둥.\n");
+		return 1;
+	}
+	generateRandomArray(arr3, size3);
+
+	start = clock();
+	quicksort(arr3, 0, size3 - 1);
+	end = clock();
+
+	double time3 = (double)(end - start) / CLOCKS_PER_SEC;
+
+	printf("%d개에 대한 실행 시간: %f초\n", size3, time3);
+
+	free(arr3);
+
+	return 0;
+}

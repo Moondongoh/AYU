@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char name[10][50];
+    FILE* file = fopen("Z.txt", "r");
+
+    if (file == NULL) {
+        printf("파일을 열 수 없습니다.\n");
+        return 1;
+    }
+
+    int line_number = 0;
+    char input_string[50];
+
+    printf("찾을 문자열을 입력하세요: ");
+    fgets(input_string, sizeof(input_string), stdin);
+    input_string[strlen(input_string) - 1] = '\0'; 
+
+    while (fgets(name[line_number], sizeof(name[line_number]), file) != NULL) {
+        name[line_number][strlen(name[line_number]) - 1] = '\0'; 
+
+        if (strcmp(input_string, name[line_number]) == 0) {
+            printf("%s은(는) 파일의 %d번째 줄에 있습니다.\n", input_string, line_number + 1);
+            return 0;
+        }
+
+        line_number++;
+    }
+
+    printf("%s을(를) 파일에서 찾을 수 없습니다.\n", input_string);
+    fclose(file);
+    return 0;
+}

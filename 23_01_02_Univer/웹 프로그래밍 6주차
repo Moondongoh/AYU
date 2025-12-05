@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>계산기</title>
+    <script>
+        function evalParseIntIsNaN(n) {
+            document.write( n, '=' , eval(n));
+        }
+    </script>
+</head>
+<body>
+    <h3>eval()로 수식 계산</h3>
+    <hr>
+    <script>
+        let n = prompt("수식 입력", "");
+        evalParseIntIsNaN(n);
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+#include <conio.h>
+
+#define ROWS 20
+#define COLS 20
+
+void generateRandomMaze(int maze[ROWS][COLS]) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            maze[i][j] = rand() % 2;
+        }
+    }
+}
+
+void printMaze(int maze[ROWS][COLS], int x, int y) {
+    system("cls"); // 콘솔 화면을 지우고 새로 출력
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (maze[i][j] == 0) {
+                printf("■ "); // 벽
+            }
+            else if (maze[i][j] == 1) {
+                printf("□ "); // 통로
+            }
+            else if (maze[i][j] == 2) {
+                if (i == x && j == y) {
+                    printf("@ "); // 주인공 위치
+                }
+                else {
+                    printf("  "); // 경로
+                }
+            }
+        }
+        printf("\n");
+    }
+}
+
+void setCursorPosition(int x, int y) {
+    COORD coord;
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+int findPath(int maze[ROWS][COLS], int x, int y) {
+    if (x < 0 || x >= ROWS || y < 0 || y >= COLS) {
+        return 0; // 경로 범위를 벗어남
+    }
+
+    if (maze[x][y] == 0) {
+        return 0; // 벽인 경우
+    }
+
+    if (x == ROWS - 1 && y == COLS - 1) {
+        maze[x][y] = 2; // 주인공 위치
+        return 1; // 목적지에 도착
+    }
+
+    if (maze[x][y] != 1) {
+        return 0; // 이미 방문한 위치
+    }
+
+    maze[x][y] = 2; // 주인공 위치
+    setCursorPosition(0, 0);
+    printMaze(maze, x, y);
+    Sleep(200); // 200ms 딜레이
+
+    if (findPath(maze, x - 1, y) || findPath(maze, x + 1, y) || findPath(maze, x, y - 1) || findPath(maze, x, y + 1)) {
+        return 1; // 상하좌우 중 하나의 경로로 목적지에 도착
+    }
+
+    maze[x][y] = 1; // 다른 경로에서 방문할 수 있도록 통로로 변경
+    return 0; // 경로가 막힘
+}
+
+int main() {
+    srand(time(NULL));
+
+    int maze[ROWS][COLS];
+    int startX = 0;
+    int startY = 0;
+
+    while (1) {
+         generateRandomMaze(maze);
+
+        if (findPath(maze, startX, startY)) {
+            break; // 유효한 경로를 찾았으면 종료
+        }
+    }
+
+    setCursorPosition(0, 0);
+    printMaze(maze, startX, startY);
+
+    while (1) {
+        if (_kbhit()) { // 키보드 입력 확인
+            char input = _getch(); // 입력된 키 가져오기
+
+            // 주인공의 새로운 위치 계산
+            int newX = startX;
+            int newY = startY;
+
+            if (input == 'w' && newX > 0 && maze[newX - 1][newY] != 0) { // 위로 이동
+                newX--;
+            }
+            else if (input == 's' && newX < ROWS - 1 && maze[newX + 1][newY] != 0) { // 아래로 이동
+                newX++;
+            }
+            else if (input == 'a' && newY > 0 && maze[newX][newY - 1] != 0) { // 왼쪽으로 이동
+                newY--;
+            }
+            else if (input == 'd' && newY < COLS - 1 && maze[newX][newY + 1] != 0) { // 오른쪽으로 이동
+                newY++;
+            }
+            else if (input == 'x') { // 종료
+                break;
+            }
+
+            if (maze[newX][newY] == 2) { // 이동한 위치가 목적지인 경우
+                setCursorPosition(0, ROWS + 1);
+                printf("도착했습니다!\n");
+                break;
+            }
+
+            maze[startX][startY] = 1; // 이전 위치를 통로로 변경
+            maze[newX][newY] = 2; // 새로운 위치를 주인공으로 변경
+            startX = newX;
+            startY = newY;
+
+            setCursorPosition(0, 0);
+            printMaze(maze, startX, startY);
+        }
+    }
+
+    return 0;
+}
+
