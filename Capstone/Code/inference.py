@@ -17,6 +17,7 @@ def evaluate_model_on_test_set():
     metrics = model.val(data=r"D:\MDO\fall_hat\Code\data.yaml", split="val")
 
     print("성능 검증이 완료되었습니다.")
+
     # =======================================================================================
     print("\n" + "=" * 50)
     print("모델 성능 최종 결과")
