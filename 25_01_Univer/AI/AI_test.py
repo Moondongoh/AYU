@@ -119,4 +119,4 @@ else:
     plt.show()
 
     pred = model.predict(image)
-    print("추정된 숫자 =", pred.argmax())  # 가장 높은 확률의 숫자 출력
+    print("추정된 숫자 =", pred.argmax())
